@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { ledControl } from '../contants/wledHttpApi';
 import {
   getWledInfo,
@@ -13,12 +14,23 @@ export default function WledFinder() {
   const [response, setResponse] = useState('');
   const [effects, setEffects] = useState([]);
   const [palettes, setPalettes] = useState([]);
+  const localIp = useSelector((store) => store.localIp);
+
+  useEffect(() => {
+    console.log(localIp);
+    findWled();
+  }, [localIp]);
 
   const findWled = async () => {
     console.log('finding Wled devices');
-    for (var i = 0; i < 255; i++) {
+    // range is [0-255] but 0 and 255 are reserved
+    for (var i = 2; i < 254; i++) {
       try {
-        const ip = `192.168.0.${i}`;
+        const ipArray = localIp.split('.');
+        ipArray.splice(3, 1);
+        ipArray.push(i);
+        const ip = ipArray.join('.');
+
         axios('http://' + ip + '/json/info').then((res) => {
           if (res.statusText === 'OK') {
             const body = res.data;
@@ -34,10 +46,10 @@ export default function WledFinder() {
   };
 
   // on mount
-  useEffect(() => {
-    // search for Wled devices in local network
-    findWled();
-  }, []);
+  //   useEffect(() => {
+  //     // search for Wled devices in local network
+  //     findWled();
+  //   }, []);
 
   // get effect and palette list
   useEffect(() => {

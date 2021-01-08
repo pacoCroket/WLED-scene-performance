@@ -1,23 +1,23 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { ledControl } from '../contants/wledHttpApi';
 import {
-  getWledInfo,
+  //   getWledInfo,
   sendRequest,
   getWledEffects,
   getWledPalettes,
 } from '../http/wledHandler';
+import { setWledDevice } from '../store/actions';
 
 export default function WledFinder() {
-  const [ipMap, setIpMap] = useState();
-  const [response, setResponse] = useState('');
   const [effects, setEffects] = useState([]);
   const [palettes, setPalettes] = useState([]);
   const localIp = useSelector((store) => store.localIp);
+  const wledDevices = useSelector((store) => store.wledDevices);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    console.log(localIp);
     findWled();
   }, [localIp]);
 
@@ -34,9 +34,8 @@ export default function WledFinder() {
         axios('http://' + ip + '/json/info').then((res) => {
           if (res.statusText === 'OK') {
             const body = res.data;
-            setIpMap((ipMap) => ({ ...ipMap, [ip]: { ...body, ip } }));
+            dispatch(setWledDevice({ ...body, ip }));
             console.log(ip, 'success');
-            getWledDeviceJsonInfo(ip);
           }
         });
       } catch (err) {
@@ -53,20 +52,17 @@ export default function WledFinder() {
 
   // get effect and palette list
   useEffect(() => {
-    if (ipMap && Object.keys(ipMap).length > 0) {
+    if (Object.keys(wledDevices).length > 0) {
       if (effects.length === 0)
-        getWledEffects(Object.keys(ipMap)[0]).then((effs) => setEffects(effs));
+        getWledEffects(Object.keys(wledDevices)[0]).then((effs) =>
+          setEffects(effs),
+        );
       if (palettes.length === 0)
-        getWledPalettes(Object.keys(ipMap)[0]).then((pals) =>
+        getWledPalettes(Object.keys(wledDevices)[0]).then((pals) =>
           setPalettes(pals),
         );
     }
-  }, [ipMap]);
-
-  const getWledDeviceJsonInfo = (ip) => {
-    setResponse('');
-    getWledInfo(ip).then((res) => setResponse(JSON.stringify(res)));
-  };
+  }, [wledDevices]);
 
   return (
     <div className="center">
@@ -74,14 +70,13 @@ export default function WledFinder() {
 
       <button onClick={findWled}>Find</button>
 
-      {ipMap ? (
+      {Object.keys(wledDevices).length > 0 ? (
         <div>
-          {Object.entries(ipMap).map(([ip, device]) => (
+          {Object.entries(wledDevices).map(([ip, device]) => (
             <WledDevice
               ip={ip}
               key={ip}
               device={device}
-              getWledDeviceJsonInfo={getWledDeviceJsonInfo}
               effects={effects}
               palettes={palettes}
             />
@@ -90,27 +85,11 @@ export default function WledFinder() {
       ) : (
         <div>No WLED devices</div>
       )}
-      <h3>Response</h3>
-      <div>
-        <div
-          style={{ backgroundColor: '#282c34', margin: '1em', padding: '1em' }}
-        >
-          <code style={{ color: 'white', backgroundColor: 'transparent' }}>
-            {response}
-          </code>
-        </div>
-      </div>
     </div>
   );
 }
 
-const WledDevice = ({
-  ip,
-  device,
-  getWledDeviceJsonInfo,
-  effects,
-  palettes,
-}) => {
+const WledDevice = ({ ip, device, effects, palettes }) => {
   const [selEffect, setSelEffect] = useState(0);
   const [selPalette, setSelPalette] = useState(0);
 
@@ -123,15 +102,9 @@ const WledDevice = ({
   };
 
   return (
-    <div className="flex" style={{ marginTop: '1em' }}>
-      {device.name} - {ip}{' '}
-      <button
-        onClick={() => {
-          getWledDeviceJsonInfo(ip);
-        }}
-      >
-        getInfo
-      </button>
+    <div className="flex" style={{ marginTop: '1em', textAlign: 'start' }}>
+      <span style={{ width: '130px' }}>{device.name}</span> -{' '}
+      <span style={{ width: '110px' }}>{ip}</span>
       {/* Effects */}
       <select
         name="effects"
@@ -143,7 +116,7 @@ const WledDevice = ({
         }
       >
         {effects.map((eff, index) => (
-          <option value={index}>
+          <option value={index} key={index}>
             {index} - {eff}
           </option>
         ))}
@@ -159,7 +132,7 @@ const WledDevice = ({
         }
       >
         {palettes.map((pal, index) => (
-          <option value={index}>
+          <option value={index} key={index}>
             {index} - {pal}
           </option>
         ))}

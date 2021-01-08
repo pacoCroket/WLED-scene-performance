@@ -1,8 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import WebMidi from 'webmidi';
+import { setMidiInputDevice, setMidiOutputDevice } from '../store/actions';
 
 export default function MidiFinder() {
-  const [midiDevices, setMidiDevices] = useState([]);
+  const inputMidiDevices = useSelector((store) => store.inputMidiDevices);
+  const outputMidiDevices = useSelector((store) => store.outputMidiDevices);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     WebMidi.enable(function (err) {
@@ -16,9 +20,9 @@ export default function MidiFinder() {
   }, []);
 
   const findMidi = () => {
-    setMidiDevices([...WebMidi.inputs, ...WebMidi.outputs]);
     console.log(WebMidi.inputs);
-    console.log(WebMidi.outputs);
+    [...WebMidi.inputs].forEach((it) => dispatch(setMidiInputDevice(it)));
+    [...WebMidi.outputs].forEach((it) => dispatch(setMidiOutputDevice(it)));
 
     // Listen to control change message on all channels
     if (WebMidi.inputs.length > 0) {
@@ -38,13 +42,18 @@ export default function MidiFinder() {
     }
   };
 
+  const allDevices = [
+    ...Object.values(inputMidiDevices),
+    ...Object.values(outputMidiDevices),
+  ];
+
   return (
     <div className="center">
       <h1>MIDI Finder</h1>
       <button onClick={findMidi}>Find</button>
-      {midiDevices.length > 0 ? (
+      {allDevices.length > 0 ? (
         <div>
-          {midiDevices.map((device, index) => (
+          {allDevices.map((device, index) => (
             <div key={index} className="flex">
               <p>
                 {device.type} - {device.name} - {device.state}

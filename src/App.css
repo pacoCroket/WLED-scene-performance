@@ -1,0 +1,12 @@
+.App {
+  text-align: center;
+  height: 100vh;
+}
+.App code {
+  background: #fff3;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+.App p {
+  margin: 0.4rem;
+}

@@ -1,4 +1,5 @@
 import {
+  SET_CONTROL_GROUP,
   SET_LOCAL_IP,
   SET_MIDI_INPUT,
   SET_MIDI_OUTPUT,
@@ -10,6 +11,7 @@ const initState = {
   inputMidiDevices: {},
   outputMidiDevices: {},
   wledDevices: {},
+  controlGroups: {},
 };
 
 export function reducer(state = initState, action) {
@@ -39,6 +41,14 @@ export function reducer(state = initState, action) {
         wledDevices: {
           ...state.wledDevices,
           [action.wledDevice.ip]: action.wledDevice,
+        },
+      };
+    case SET_CONTROL_GROUP:
+      return {
+        ...state,
+        controlGroups: {
+          ...state.controlGroups,
+          [action.controlGroup.id]: action.controlGroup,
         },
       };
     default:

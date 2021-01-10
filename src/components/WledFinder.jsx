@@ -8,7 +8,7 @@ import {
   getWledEffects,
   getWledPalettes,
 } from '../http/wledHandler';
-import { setWledDevice } from '../store/actions';
+import { setControlGroup, setWledDevice } from '../store/actions';
 
 export default function WledFinder() {
   const [effects, setEffects] = useState([]);
@@ -74,7 +74,6 @@ export default function WledFinder() {
         <div>
           {Object.entries(wledDevices).map(([ip, device]) => (
             <WledDevice
-              ip={ip}
               key={ip}
               device={device}
               effects={effects}
@@ -89,9 +88,31 @@ export default function WledFinder() {
   );
 }
 
-const WledDevice = ({ ip, device, effects, palettes }) => {
+const WledDevice = ({ device, effects, palettes }) => {
   const [selEffect, setSelEffect] = useState(0);
   const [selPalette, setSelPalette] = useState(0);
+  const controlGroups = useSelector((store) => store.controlGroups);
+  const controlGroupsCount = Object.keys(controlGroups).length;
+  const dispatch = useDispatch();
+  const { ip, name } = device;
+
+  const setGroup = (controlGroupId) => {
+    console.log(controlGroupId);
+    // do nothing if already in this group
+    if (controlGroupId === device.controlGroupId || controlGroupId === null)
+      return;
+
+    const updatedDevice = { ...device, controlGroupId };
+    // check if this is an existing or new group
+    let updatedControlGroup;
+    if (controlGroups[controlGroupId]) {
+      updatedControlGroup = controlGroups[controlGroupId].ips.push(ip);
+    } else {
+      updatedControlGroup = { id: controlGroupId, ips: [ip] };
+    }
+    dispatch(setWledDevice(updatedDevice));
+    dispatch(setControlGroup(updatedControlGroup));
+  };
 
   const setWled = (ip) => {
     console.log({ selEffect, selPalette });
@@ -103,7 +124,36 @@ const WledDevice = ({ ip, device, effects, palettes }) => {
 
   return (
     <div className="flex" style={{ marginTop: '1em', textAlign: 'start' }}>
-      <span style={{ width: '130px' }}>{device.name}</span> -{' '}
+      <span style={{ width: '130px' }}>{name}</span>
+      {/* Group */}
+      <div>
+        Group:{' '}
+        <select
+          name="group"
+          id="group"
+          onChange={(e) =>
+            setGroup(e.target.options[e.target.selectedIndex].value)
+          }
+        >
+          {device.controlGroupId === undefined && (
+            <option value={null} class="active">
+              No group
+            </option>
+          )}
+          {Object.values(controlGroups).map((controlGroup, index) => (
+            <option
+              value={index}
+              key={index}
+              class={controlGroup.id === device.controlGroupId ? 'active' : ''}
+            >
+              Group {controlGroup.id + 1}
+            </option>
+          ))}
+          <option value={controlGroupsCount}>
+            New Group ({controlGroupsCount})
+          </option>
+        </select>
+      </div>
       <span style={{ width: '110px' }}>{ip}</span>
       {/* Effects */}
       <select

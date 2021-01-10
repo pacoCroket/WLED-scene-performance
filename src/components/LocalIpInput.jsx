@@ -16,7 +16,7 @@ export default function LocalIpInput() {
     }
   };
   return (
-    <div>
+    <div className="center">
       <h3>IPv4 Address (local Ip)</h3>
       <input
         type="text"

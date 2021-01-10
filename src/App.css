@@ -1,6 +1,9 @@
 .App {
   text-align: center;
-  height: 100vh;
+  min-height: 100vh;
+  background: rgb(26, 26, 26);
+  color: aliceblue;
+  padding: 2em 2em;
 }
 .App code {
   background: #fff3;

@@ -1,43 +1,33 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
+import ControlGroup from './ControlGroup';
 
 export default function ControlGroups() {
   const controlGroups = useSelector((store) => store.controlGroups);
   const wledDevices = useSelector((store) => store.wledDevices);
 
-  const deviceListStyle = {
-    display: 'flex',
-    flexDirection: 'row',
-    width: '100%',
-    alignContent: 'center',
-  };
+  const noGroupDevices = Object.values(wledDevices).filter(
+    (it) => it.controlGroupId === null,
+  );
 
   return (
-    <div>
+    <div className="center">
       <h1>Control Groups</h1>
-      {Object.keys(controlGroups).map((controlGroup) => (
-        <div>
-          <h4>Group {controlGroup.id + 1}</h4>
-          <div style={deviceListStyle}>
-            {Object.values(wledDevices)
-              .filter((it) => it.controlGroupId === controlGroup.id)
-              .map((wledDevice) => (
-                <div key={wledDevice.ip}>{wledDevice.name}</div>
-              ))}
-          </div>
-        </div>
-      ))}
+      {Object.values(controlGroups).map((controlGroup) => {
+        const groupDevices = Object.values(wledDevices).filter(
+          (it) => it.controlGroupId === controlGroup.id,
+        );
+        return (
+          <ControlGroup
+            controlGroup={controlGroup}
+            groupDevices={groupDevices}
+          />
+        );
+      })}
 
-      <div>
-        <h4>No Group</h4>
-        <div style={deviceListStyle}>
-          {Object.values(wledDevices)
-            .filter((it) => it.controlGroupId === undefined)
-            .map((wledDevice) => (
-              <div key={wledDevice.ip}>{wledDevice.name}</div>
-            ))}
-        </div>
-      </div>
+      {noGroupDevices.length > 0 && (
+        <ControlGroup controlGroup={undefined} groupDevices={noGroupDevices} />
+      )}
     </div>
   );
 }

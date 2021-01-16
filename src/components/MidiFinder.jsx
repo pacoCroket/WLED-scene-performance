@@ -48,7 +48,7 @@ export default function MidiFinder() {
   ];
 
   return (
-    <div className="center">
+    <div className="">
       <h1>MIDI Finder</h1>
       <button onClick={findMidi}>Find</button>
       {allDevices.length > 0 ? (

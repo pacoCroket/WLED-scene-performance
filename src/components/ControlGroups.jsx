@@ -11,7 +11,7 @@ export default function ControlGroups() {
   );
 
   return (
-    <div className="center">
+    <div className="groups-control">
       <h1>Control Groups</h1>
       {Object.values(controlGroups).map((controlGroup) => {
         const groupDevices = Object.values(wledDevices).filter(

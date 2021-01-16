@@ -60,7 +60,7 @@ export default function WledFinder() {
   }, [wledDevices]);
 
   return (
-    <div className="center">
+    <div className="devices-grouping border border-primary rounded-start">
       <h1>WLED Finder</h1>
 
       <button onClick={findWled}>Find</button>

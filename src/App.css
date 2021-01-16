@@ -3,7 +3,6 @@
   min-height: 100vh;
   background: rgb(26, 26, 26);
   color: aliceblue;
-  padding: 2em 2em;
 }
 .App code {
   background: #fff3;
@@ -13,3 +12,40 @@
 .App p {
   margin: 0.4rem;
 }
+
+/* Grid  */
+.App .grid {
+  display: grid;
+  height: 100%;
+  grid-template-columns: 50px auto 200px;
+  grid-template-rows: 50px 1fr 1fr 50px;
+  grid-template-areas:
+    'header header header'
+    'left-nav groups devices'
+    'left-nav scenes devices'
+    'footer footer footer';
+  column-gap: 10px;
+  row-gap: 15px;
+}
+
+.header {
+  grid-area: header;
+}
+
+.side-navbar {
+  grid-area: left-nav;
+}
+
+.groups-control {
+  grid-area: groups;
+}
+
+.devices-grouping {
+  grid-area: devices;
+}
+
+.footer {
+  grid-area: footer;
+}
+
+/*  */

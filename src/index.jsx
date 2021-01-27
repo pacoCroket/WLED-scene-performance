@@ -5,6 +5,7 @@ import { createStore } from 'redux';
 import App from './App.jsx';
 import './index.css';
 import { reducer } from './store/reducer.js';
+import 'tailwindcss/dist/tailwind.css';
 
 const store = createStore(
   reducer,

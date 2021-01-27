@@ -19,10 +19,7 @@ export default function LocalIpInput() {
   return (
     <>
       <button
-        type="button"
-        className="btn btn-primary"
-        data-bs-toggle="modal"
-        data-bs-target="#exampleModal"
+        className="p-1 my-2 bg-indigo-800 hover:bg-indigo-600 rounded w-16"
         onClick={() => setShowModal(!showModal)}
       >
         Local IP
@@ -31,9 +28,8 @@ export default function LocalIpInput() {
       {showModal && (
         <div
           className="modal fade"
-          id="exampleModal"
+          id="localIpModal"
           tab-index="-1"
-          aria-labelledby="exampleModalLabel"
           aria-hidden="true"
         >
           <div className="modal-dialog">
@@ -50,7 +46,7 @@ export default function LocalIpInput() {
                 ></button>
               </div>
               <div className="modal-body">
-                <div className="">
+                <div className="d-flex justify-content-center">
                   <input
                     type="text"
                     value={ip}

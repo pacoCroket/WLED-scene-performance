@@ -2,25 +2,6 @@ import React, { useState } from 'react';
 import { ledControl } from '../contants/wledHttpApi';
 import { sendRequest } from '../http/wledHandler';
 
-const groupStyle = {
-  marginBottom: '1em',
-  border: '1px solid lightgrey',
-};
-
-const deviceListStyle = {
-  display: 'flex',
-  flexDirection: 'row',
-  alignContent: 'center',
-  justifyContent: 'center',
-  border: '1px solid grey',
-  padding: '1em',
-};
-
-const deviceItemStyle = {
-  marginLeft: '2em',
-  marginRight: '2em',
-};
-
 export default function ControlGroup({ controlGroup, groupDevices }) {
   const [brightness, setBrightness] = useState(127);
   const [speed, setSpeed] = useState(127);
@@ -47,21 +28,21 @@ export default function ControlGroup({ controlGroup, groupDevices }) {
   };
 
   return (
-    <div style={groupStyle}>
+    <div className="mb-8 rounded border border-white">
       <h4>
         {controlGroup !== undefined
           ? `Group ${controlGroup.id + 1}`
           : 'No group'}
       </h4>
-      <div style={deviceListStyle}>
+      <div className="flex align-center justify-center p-4 border-t border-grey">
         {Object.values(groupDevices).map((wledDevice) => (
-          <div key={wledDevice.ip} style={deviceItemStyle}>
+          <div key={wledDevice.ip} className="mx-6">
             {wledDevice.name}
           </div>
         ))}
       </div>
 
-      <div style={deviceListStyle}>
+      <div className="flex align-center justify-center p-4 border-t border-grey">
         <GroupControl
           headline="Group Bri"
           onChange={handleBriChange}

@@ -1,15 +1,3 @@
-.flex {
-  display: flex;
-  justify-content: space-between;
-  padding: 0 2rem;
-}
-
-.center {
-  width: 70vw;
-  margin-left: auto;
-  margin-right: auto;
-}
-
 /* Rotary Control */
 .knob {
   display: flex;

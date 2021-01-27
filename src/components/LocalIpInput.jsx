@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { setLocalIp } from '../store/actions';
+import Modal from './Modal';
 
 export default function LocalIpInput() {
   const [showModal, setShowModal] = useState(false);
@@ -26,51 +27,29 @@ export default function LocalIpInput() {
       </button>
 
       {showModal && (
-        <div
-          className="modal fade"
-          id="localIpModal"
-          tab-index="-1"
-          aria-hidden="true"
-        >
-          <div className="modal-dialog">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title" id="exampleModalLabel">
-                  Set IPv4 local address
-                </h5>
-                <button
-                  type="button"
-                  className="btn-close"
-                  data-bs-dismiss="modal"
-                  aria-label="Close"
-                ></button>
-              </div>
-              <div className="modal-body">
-                <div className="d-flex justify-content-center">
-                  <input
-                    type="text"
-                    value={ip}
-                    onChange={(e) => setIp(e.target.value)}
-                    onKeyDown={(e) => e.key === 'Enter' && handleSetIp()}
-                  />
-                  <button onClick={handleSetIp}>Set IP</button>
-                </div>
-              </div>
-              <div className="modal-footer">
-                <button
-                  type="button"
-                  className="btn btn-secondary"
-                  data-bs-dismiss="modal"
-                >
-                  Close
-                </button>
-                <button type="button" className="btn btn-primary">
-                  Save changes
-                </button>
-              </div>
-            </div>
+        <Modal header="Set local IP" closeModal={() => setShowModal(false)}>
+          <div className="flex">
+            <input
+              type="text"
+              className="flex-1"
+              value={ip}
+              onChange={(e) => setIp(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && handleSetIp()}
+            />
+            <button className="flex-1" onClick={handleSetIp}>
+              Set IP
+            </button>
           </div>
-        </div>
+          <div className="mt-5">
+            <a
+              className="text-blue-400 hover:underline"
+              href="https://lifehacker.com/how-to-find-your-local-and-external-ip-address-5833108#:~:text=Open%20up%20the%20Command%20Prompt,is%20your%20local%20IP%20address."
+              target="_blank"
+            >
+              How to find your local IP
+            </a>
+          </div>
+        </Modal>
       )}
     </>
   );

@@ -53,7 +53,7 @@ export default function WledDevice({ device, effects, palettes }) {
           }
         >
           {device.controlGroupId === null && (
-            <option value={null} class="active">
+            <option value={null} className="active">
               No group
             </option>
           )}
@@ -61,7 +61,9 @@ export default function WledDevice({ device, effects, palettes }) {
             <option
               value={index}
               key={index}
-              class={controlGroup.id === device.controlGroupId ? 'active' : ''}
+              className={
+                controlGroup.id === device.controlGroupId ? 'active' : ''
+              }
             >
               Group {controlGroup.id + 1}
             </option>

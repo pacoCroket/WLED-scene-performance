@@ -37,7 +37,7 @@ export default function ControlGroup({ controlGroup, groupDevices }) {
       <div className="flex align-center justify-center p-4 border-t border-grey">
         {Object.values(groupDevices).map((wledDevice) => (
           <div key={wledDevice.ip} className="mx-6">
-            {wledDevice.name}
+            {wledDevice.name} - {wledDevice.ip}
           </div>
         ))}
       </div>

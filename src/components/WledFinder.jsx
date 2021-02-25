@@ -19,11 +19,11 @@ export default function WledFinder() {
   }, [localIp]);
 
   const findWled = async () => {
-    setIsSearching(true);
     console.log('finding Wled devices');
+    setIsSearching(true);
+    let donePromises = 0; // from 2 to 254 as in the loop
     // range is [0-255] but 0 and 255 are reserved
-    const promises = [];
-    for (var i = 2; i < 254; i++) {
+    for (var i = 2; i < 255; i++) {
       try {
         const ipArray = localIp.split('.');
         ipArray.splice(3, 1);
@@ -32,23 +32,28 @@ export default function WledFinder() {
 
         const promise = axios('http://' + ip + '/json/info', { timeout: 5000 });
 
-        promises.push(promise); // to keep track of when all promises are done
-
         // we check the result immediately anyway
-        promise.then((res) => {
-          if (res.statusText === 'OK') {
-            const body = res.data;
-            dispatch(setWledDevice({ ...body, ip, controlGroupId: null })); //  TODO util to construct a new wled device
-            console.log(ip, 'success');
-          }
-        });
+        promise
+          .then((res) => {
+            if (res.statusText === 'OK') {
+              const body = res.data;
+              dispatch(setWledDevice({ ...body, ip, controlGroupId: null })); //  TODO util to construct a new wled device
+              console.log(ip, 'success');
+            }
+          })
+          .catch((err) => {
+            // Do nothing
+          })
+          .finally(() => {
+            donePromises++;
+            if (donePromises >= 253) {
+              setIsSearching(false);
+            }
+          });
       } catch (err) {
-        // console.log(err.response);
+        // Do nothing
       }
     }
-    Promise.all(promises).then((responses) => {
-      setIsSearching(false);
-    });
   };
 
   // get effect and palette list
@@ -73,11 +78,13 @@ export default function WledFinder() {
         className="p-1 my-2 bg-indigo-800 hover:bg-indigo-600 rounded w-20"
         onClick={findWled}
       >
-        <div className="flex justify-between content-center mx-2">
+        <div className="flex justify-center content-center mx-2">
           Find
-          <span className="ml-2 align-middle">
-            {isSearching && <CgSpinner className="animate-spin" size="1.5em" />}
-          </span>
+          {isSearching && (
+            <span className="ml-2 align-middle">
+              <CgSpinner className="animate-spin" size="1.5em" />
+            </span>
+          )}
         </div>
       </button>
       <span>

@@ -12,16 +12,26 @@ export default function WledDevice({ device, effects, palettes }) {
   const dispatch = useDispatch();
   const { ip, name } = device;
 
+  const handleChange = (e) => {
+    const controlGroupId = Number.parseInt(
+      e.target.options[e.target.selectedIndex].value,
+    );
+    setGroup(controlGroupId);
+  };
+
   const setGroup = (controlGroupId) => {
     // do nothing if already in this group
-    if (controlGroupId === device.controlGroupId || !controlGroupId >= 0)
+    if (controlGroupId === device.controlGroupId || !(controlGroupId >= 0)) {
       return;
+    }
 
+    console.log(controlGroupId);
     const updatedDevice = { ...device, controlGroupId };
     // check if this is an existing or new group
     let updatedControlGroup;
     if (controlGroups[controlGroupId]) {
-      updatedControlGroup = controlGroups[controlGroupId].ips.push(ip);
+      updatedControlGroup = controlGroups[controlGroupId];
+      updatedControlGroup.ips.push(ip);
     } else {
       updatedControlGroup = { id: controlGroupId, ips: [ip] };
     }
@@ -45,11 +55,7 @@ export default function WledDevice({ device, effects, palettes }) {
         name="group"
         className="bg-gray-500"
         id="group"
-        onChange={(e) =>
-          Number.parseInt(
-            setGroup(e.target.options[e.target.selectedIndex].value),
-          )
-        }
+        onChange={handleChange}
       >
         {device.controlGroupId === null && (
           <option value={null} className="active">

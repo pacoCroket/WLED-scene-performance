@@ -38,75 +38,39 @@ export default function WledDevice({ device, effects, palettes }) {
   };
 
   return (
-    <div className="flex" style={{ marginTop: '1em', textAlign: 'start' }}>
-      <span style={{ width: '130px' }}>{name}</span>
+    <>
+      <span>{name}</span>
       {/* Group */}
-      <div>
-        Group:{' '}
-        <select
-          name="group"
-          id="group"
-          onChange={(e) =>
-            Number.parseInt(
-              setGroup(e.target.options[e.target.selectedIndex].value),
-            )
-          }
-        >
-          {device.controlGroupId === null && (
-            <option value={null} className="active">
-              No group
-            </option>
-          )}
-          {Object.values(controlGroups).map((controlGroup, index) => (
-            <option
-              value={index}
-              key={index}
-              className={
-                controlGroup.id === device.controlGroupId ? 'active' : ''
-              }
-            >
-              Group {controlGroup.id + 1}
-            </option>
-          ))}
-          <option value={controlGroupsCount}>
-            New Group ({controlGroupsCount})
-          </option>
-        </select>
-      </div>
-      <span style={{ width: '110px' }}>{ip}</span>
-      {/* Effects */}
       <select
-        name="effects"
-        id="effects"
+        name="group"
+        className="bg-gray-500"
+        id="group"
         onChange={(e) =>
-          setSelEffect(
-            Number.parseInt(e.target.options[e.target.selectedIndex].value),
+          Number.parseInt(
+            setGroup(e.target.options[e.target.selectedIndex].value),
           )
         }
       >
-        {effects.map((eff, index) => (
-          <option value={index} key={index}>
-            {index} - {eff}
+        {device.controlGroupId === null && (
+          <option value={null} className="active">
+            No group
+          </option>
+        )}
+        {Object.values(controlGroups).map((controlGroup, index) => (
+          <option
+            value={index}
+            key={index}
+            className={
+              controlGroup.id === device.controlGroupId ? 'active' : ''
+            }
+          >
+            Group {controlGroup.id + 1}
           </option>
         ))}
+        <option value={controlGroupsCount}>
+          New Group ({controlGroupsCount})
+        </option>
       </select>
-      {/* Palettes */}
-      <select
-        name="palettes"
-        id="palettes"
-        onChange={(e) =>
-          setSelPalette(
-            Number.parseInt(e.target.options[e.target.selectedIndex].value),
-          )
-        }
-      >
-        {palettes.map((pal, index) => (
-          <option value={index} key={index}>
-            {index} - {pal}
-          </option>
-        ))}
-      </select>
-      <button onClick={() => setWled(ip)}>Set</button>
-    </div>
+    </>
   );
 }

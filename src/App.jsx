@@ -9,7 +9,7 @@ import SideNavbar from './components/SideNavbar';
 function App() {
   return (
     <div className="App">
-      <div className="grid bg-gray-900">
+      <div className="workspace-grid bg-gray-900">
         <SideNavbar />
         <ControlGroups />
         <WledFinder />

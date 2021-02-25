@@ -34,9 +34,12 @@ export default function ControlGroup({ controlGroup, groupDevices }) {
           ? `Group ${controlGroup.id + 1}`
           : 'No group'}
       </h4>
-      <div className="flex align-center justify-center p-4 border-t border-grey">
+      <div className="flex flex-wrap align-center justify-center p-4 border-t border-grey">
         {Object.values(groupDevices).map((wledDevice) => (
-          <div key={wledDevice.ip} className="mx-6">
+          <div
+            key={wledDevice.ip}
+            className="mx-3 my-2 py-1 px-2 bg-opacity-50 bg-gray-500 rounded"
+          >
             {wledDevice.name} - {wledDevice.ip}
           </div>
         ))}

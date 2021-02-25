@@ -30,7 +30,7 @@ export default function WledFinder() {
         ipArray.push(i);
         const ip = ipArray.join('.');
 
-        const promise = axios('http://' + ip + '/json/info');
+        const promise = axios('http://' + ip + '/json/info', { timeout: 5000 });
 
         promises.push(promise); // to keep track of when all promises are done
 
@@ -43,7 +43,7 @@ export default function WledFinder() {
           }
         });
       } catch (err) {
-        console.log(err.response);
+        // console.log(err.response);
       }
     }
     Promise.all(promises).then((responses) => {
@@ -84,7 +84,7 @@ export default function WledFinder() {
         {wledDevices.length > 0 ? `${wledDevices.length}` : 'No'} WLED devices
       </span>
       {Object.keys(wledDevices).length > 0 && (
-        <div>
+        <div className="grid grid-cols-2 gap-2">
           {Object.entries(wledDevices).map(([ip, device]) => (
             <WledDevice
               key={ip}

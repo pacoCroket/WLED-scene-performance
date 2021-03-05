@@ -74,7 +74,7 @@ export default function WledDevice({ device, effects, palettes }) {
           </option>
         ))}
         <option value={controlGroupsCount}>
-          New Group ({controlGroupsCount})
+          New Group ({controlGroupsCount + 1})
         </option>
       </select>
     </>

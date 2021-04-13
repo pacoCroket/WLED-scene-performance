@@ -4,4 +4,6 @@ export const ledControl = {
   effectSpeed: { param: 'SX=', range: [0, 255] },
   effectIntensity: { param: 'IX=', range: [0, 255] },
   paletteIndex: { param: 'FP=', range: [0, 55] },
+  receiveUDP: { param: 'RN=', range: [0, 1] },
+  sendUDP: { param: 'SN=', range: [0, 1] },
 };

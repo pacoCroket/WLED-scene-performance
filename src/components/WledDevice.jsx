@@ -49,7 +49,9 @@ export default function WledDevice({ device, effects, palettes }) {
 
   return (
     <>
-      <span>{name}</span>
+      <a href={'http://' + ip} target="_blank">
+        {name}
+      </a>
       {/* Group */}
       <select
         name="group"

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ledControl } from '../contants/wledHttpApi';
-import { sendRequest } from '../http/wledHandler';
+import { sendJsonRequest, sendRequest } from '../http/wledHandler';
 
 export default function ControlGroup({ controlGroup, groupDevices }) {
   const [brightness, setBrightness] = useState(127);
@@ -15,25 +15,45 @@ export default function ControlGroup({ controlGroup, groupDevices }) {
     setBrightness(brightness);
   };
   const handleSpeedChange = (speed) => {
+    // const payload = { seg: [{ sx: speed }] };
+    // groupDevices.forEach((device) => {
+    //   sendJsonRequest(device.ip, payload);
+    // });
     groupDevices.forEach((device) => {
       sendRequest(device.ip, ledControl.effectSpeed.param, speed);
     });
     setSpeed(speed);
   };
   const handleIntensityChange = (intensity) => {
+    // const payload = { seg: [{ ix: intensity }] };
+    // groupDevices.forEach((device) => {
+    //   sendJsonRequest(device.ip, payload);
+    // });
     groupDevices.forEach((device) => {
       sendRequest(device.ip, ledControl.effectIntensity.param, intensity);
     });
     setIntensity(intensity);
   };
+  const handleCancelUDP = () => {
+    const payload = {
+      udpn: {
+        send: false,
+        recv: false,
+      },
+    };
+    groupDevices.forEach((device) => {
+      sendJsonRequest(device.ip, payload);
+    });
+  };
 
   return (
     <div className="mb-8 rounded border border-white">
-      <h4>
-        {controlGroup !== undefined
-          ? `Group ${controlGroup.id + 1}`
-          : 'No group'}
-      </h4>
+      <div className="flex justify-center">
+        <h4>{`Group ${controlGroup.id + 1}`}</h4>
+        <button className="float-right" onClick={handleCancelUDP}>
+          Cancel UDP
+        </button>
+      </div>
       <div className="flex flex-wrap align-center justify-center p-4 border-t border-grey">
         {Object.values(groupDevices).map((wledDevice) => (
           <div
@@ -47,7 +67,7 @@ export default function ControlGroup({ controlGroup, groupDevices }) {
 
       <div className="flex align-center justify-center p-4 border-t border-grey">
         <GroupControl
-          headline="Group Bri"
+          headline="Brightness"
           onChange={handleBriChange}
           value={brightness}
         />

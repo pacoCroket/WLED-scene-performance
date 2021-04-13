@@ -19,15 +19,16 @@ export default function ControlGroups() {
         );
         return (
           <ControlGroup
+            key={controlGroup.id}
             controlGroup={controlGroup}
             groupDevices={groupDevices}
           />
         );
       })}
 
-      {noGroupDevices.length > 0 && (
+      {/* {noGroupDevices.length > 0 && (
         <ControlGroup controlGroup={undefined} groupDevices={noGroupDevices} />
-      )}
+      )} */}
     </div>
   );
 }

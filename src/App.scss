@@ -1,0 +1,68 @@
+$primary-font-color: #f0f8ff;
+
+.App {
+  text-align: center;
+  color: $primary-font-color;
+
+  code {
+    background: #fff3;
+    padding: 4px 8px;
+    border-radius: 4px;
+  }
+
+  p {
+    margin: 0.4rem;
+  }
+}
+
+/* Grid  */
+.workspace-grid {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 80px auto 200px;
+  grid-template-rows: 50px 1fr 1fr 50px;
+  grid-template-areas:
+    "header header header"
+    "left-nav groups devices"
+    "left-nav scenes devices"
+    "footer footer footer";
+  column-gap: 22px;
+  row-gap: 15px;
+
+  .header {
+    grid-area: header;
+  }
+
+  .side-navbar {
+    grid-area: left-nav;
+  }
+
+  .groups-control {
+    grid-area: groups;
+  }
+
+  .devices-grouping {
+    grid-area: devices;
+  }
+
+  .footer {
+    grid-area: footer;
+  }
+}
+
+/*  */
+.btn {
+  color: $primary-font-color;
+  background-color: rgb(1, 1, 95);
+  border-radius: 2px;
+  opacity: 1;
+  padding: 0.5rem 1rem;
+
+  .loading {
+    opacity: 0.5;
+  }
+}

@@ -1,7 +1,7 @@
 <template>
   <div class="App">
-    <header class="App-header">WLED Scene Performance</header>
     <div class="workspace-grid">
+      <div class="header">WLED Scene Performance</div>
       <WledFinder />
     </div>
   </div>
@@ -9,6 +9,8 @@
 
 <script>
 import WledFinder from "./components/WledFinder";
+import "./utils/three";
+import { initCloud } from "./cloudWebGL";
 import "./App.scss";
 
 export default {
@@ -20,6 +22,9 @@ export default {
     return {
       message: "Learn Vue",
     };
+  },
+  mounted() {
+    if (!document.body.querySelector("canvas")) initCloud();
   },
 };
 </script>
@@ -33,6 +38,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background: rgb(44, 44, 44);
+  overflow-x: hidden;
 }
 
 code {

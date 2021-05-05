@@ -1,8 +1,10 @@
 $primary-font-color: #f0f8ff;
+$primary-background-color: rgb(44, 44, 44);
 
 .App {
   text-align: center;
   color: $primary-font-color;
+  background: $primary-background-color;
 
   //   code {
   //     background: #fff3;
@@ -35,6 +37,7 @@ $primary-font-color: #f0f8ff;
 
   .header {
     grid-area: header;
+    font-size: 2rem;
   }
 
   .side-navbar {
@@ -52,6 +55,14 @@ $primary-font-color: #f0f8ff;
   .footer {
     grid-area: footer;
   }
+}
+/* CANVAS */
+.canvas {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
 }
 
 /*  */
@@ -97,6 +108,7 @@ $primary-font-color: #f0f8ff;
       grid-auto-flow: column;
       grid-template-columns: repeat(auto-fill, 1fr);
       width: 100%;
+      background: $primary-background-color;
 
       .color {
         height: 100%;

@@ -1,7 +1,9 @@
 <template>
   <div class="App">
     <header class="App-header">WLED Scene Performance</header>
-    <WledFinder />
+    <div class="workspace-grid">
+      <WledFinder />
+    </div>
   </div>
 </template>
 
@@ -30,7 +32,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: rgb(65, 65, 65);
+  background: rgb(44, 44, 44);
 }
 
 code {

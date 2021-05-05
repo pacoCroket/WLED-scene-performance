@@ -4,11 +4,11 @@ $primary-font-color: #f0f8ff;
   text-align: center;
   color: $primary-font-color;
 
-  code {
-    background: #fff3;
-    padding: 4px 8px;
-    border-radius: 4px;
-  }
+  //   code {
+  //     background: #fff3;
+  //     padding: 4px 8px;
+  //     border-radius: 4px;
+  //   }
 
   p {
     margin: 0.4rem;
@@ -23,7 +23,7 @@ $primary-font-color: #f0f8ff;
   height: 100%;
   width: 100%;
   display: grid;
-  grid-template-columns: 80px auto 200px;
+  grid-template-columns: 80px auto max(200px, 20%);
   grid-template-rows: 50px 1fr 1fr 50px;
   grid-template-areas:
     "header header header"
@@ -61,8 +61,47 @@ $primary-font-color: #f0f8ff;
   border-radius: 2px;
   opacity: 1;
   padding: 0.5rem 1rem;
+  margin-bottom: 0.5rem;
 
-  .loading {
+  &.loading {
     opacity: 0.5;
+  }
+}
+
+.wled-device-list {
+  background: rgb(90, 90, 90);
+  padding: 0.5rem 1rem;
+
+  .wled-device {
+    margin: 0.5rem 0;
+    display: grid;
+    grid-template-areas:
+      "name ip"
+      "color color";
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: auto 2rem;
+    justify-items: start;
+
+    .name {
+      grid-area: name;
+    }
+
+    .ip-link {
+      grid-area: ip;
+      justify-self: end;
+    }
+
+    .led-colors {
+      grid-area: color;
+      display: grid;
+      grid-auto-flow: column;
+      grid-template-columns: repeat(auto-fill, 1fr);
+      width: 100%;
+
+      .color {
+        height: 100%;
+        width: 100%;
+      }
+    }
   }
 }

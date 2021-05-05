@@ -1,35 +1,37 @@
 <template>
-  <div>
+  <div class="devices-grouping">
     WLED Finder
-    <button
-      @click="findWled()"
-      v-bind:class="{ loading: isSearching }"
-      class="btn"
-    >
+    <button @click="findWled()" :class="{ loading: isSearching }" class="btn">
       Scan
     </button>
-    <div id="v-for-object" class="demo">
-      <div v-for="wledDevice in wledDevices" v-bind:key="wledDevice.ip">
-        <a v-bind:href="'http://' + wledDevice.ip" target="_blank">{{
-          wledDevice.ip
-        }}</a>
-        <span>{{ wledDevice.name }} </span>
-      </div>
+    <div class="wled-device-list">
+      <WledDevice
+        v-for="wledDevice in wledDevices"
+        :data="wledDevice"
+        :key="wledDevice.ip"
+      />
     </div>
   </div>
 </template>
 
 <script>
 import axios from "axios";
+import WledDevice from "./WledDevice";
 
 export default {
   name: "WledFinder",
+  components: {
+    WledDevice,
+  },
   data() {
     return {
       wledDevices: {},
       localIp: "192.168.0.1",
       isSearching: false,
     };
+  },
+  created() {
+    this.findWled();
   },
   methods: {
     findWled() {

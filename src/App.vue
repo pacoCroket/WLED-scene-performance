@@ -9,7 +9,7 @@
 
 <script>
 import WledFinder from "./components/WledFinder";
-import "./utils/three";
+// import "./utils/three";
 import { initCloud } from "./cloudWebGL";
 import "./App.scss";
 

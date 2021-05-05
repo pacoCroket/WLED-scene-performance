@@ -5,9 +5,11 @@
     "test": "echo \"This template does not include a test runner by default.\" && exit 1"
   },
   "dependencies": {
+    "axios": "^0.21.1",
+    "postprocessing": "^6.21.4",
+    "three": "^0.128.0",
     "vue": "^3.0.11",
-    "webmidi": "^2.5.1",
-    "axios": "^0.21.1"
+    "webmidi": "^2.5.1"
   },
   "devDependencies": {
     "@snowpack/plugin-dotenv": "^2.1.0",

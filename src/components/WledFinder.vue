@@ -1,10 +1,29 @@
 <template>
   <div class="devices-grouping">
-    WLED Finder
-    <button @click="findWled()" :class="{ loading: isSearching }" class="btn">
-      Scan
-    </button>
+    <span> WLED Finder</span>
+
     <div class="wled-device-list">
+      <div
+        style="display: flex; justifycontent: space-between; alignitems: center"
+      >
+        <button
+          @click="findWled()"
+          :class="{ loading: isSearching }"
+          class="btn"
+        >
+          Scan
+        </button>
+        <span
+          style="
+            display: flex;
+            flexWrap: nowrap;
+            justifyContent: space-between;
+            alignItems: center;
+            margin: 0 0.5rem;
+          "
+          >IP: <input type="text" style="margin: 0 0.5rem" v-model="localIp"
+        /></span>
+      </div>
       <WledDevice
         v-for="wledDevice in wledDevices"
         :data="wledDevice"

@@ -1,6 +1,19 @@
 import smokeRef from "./res/smoke.png";
-import * as POSTPROCESSING from "postprocessing";
+import {
+  BloomEffect,
+  EffectPass,
+  EffectComposer,
+  BlendFunction,
+  KernelSize,
+  RenderPass,
+} from "postprocessing";
 import * as THREE from "three";
+import * as dat from "dat.gui";
+
+// Debug
+const gui = new dat.GUI();
+const lightingFolder = gui.addFolder("Lighting");
+const positionFolder = gui.addFolder("Position");
 
 let scene,
   camera,
@@ -23,7 +36,7 @@ export function initCloud() {
 
   renderer = new THREE.WebGLRenderer();
   renderer.setSize(window.innerWidth, window.innerHeight);
-  scene.fog = new THREE.FogExp2(0x03544e, 0.001);
+  scene.fog = new THREE.FogExp2(0x222222, 0.001);
   renderer.setClearColor(scene.fog.color);
   document.body.appendChild(renderer.domElement);
 
@@ -38,7 +51,7 @@ export function initCloud() {
 
     for (let p = 0; p < 10; p++) {
       let cloud = new THREE.Mesh(cloudGeo, cloudMaterial);
-      cloud.position.set(Math.random() * 800 - 400, 500, Math.random() * 500 - 500);
+      cloud.position.set(Math.random() * 400 - 200, 500, Math.random() * 250 - 500);
       cloud.rotation.x = 1.16;
       cloud.rotation.y = -0.12;
       cloud.rotation.z = Math.random() * 2 * Math.PI;
@@ -57,44 +70,70 @@ export function initCloud() {
 }
 
 function handleComposer() {
-  const bloomEffect = new POSTPROCESSING.BloomEffect({
-    blendFunction: POSTPROCESSING.BlendFunction.COLOR_DODGE,
-    kernelSize: POSTPROCESSING.KernelSize.SMALL,
+  const bloomEffect = new BloomEffect({
+    blendFunction: BlendFunction.SOFT_LIGHT,
+    kernelSize: KernelSize.SMALL,
     useLuminanceFilter: true,
     luminanceThreshold: 0.3,
     luminanceSmoothing: 0.75,
   });
   bloomEffect.blendMode.opacity.value = 1.5;
+  lightingFolder.add(bloomEffect.blendMode.opacity, "value", 0, 10).name("BlendModeOpacity");
 
-  let effectPass = new POSTPROCESSING.EffectPass(camera, bloomEffect);
+  let effectPass = new EffectPass(camera, bloomEffect);
   effectPass.renderToScreen = true;
 
-  composer = new POSTPROCESSING.EffectComposer(renderer);
-  composer.addPass(new POSTPROCESSING.RenderPass(scene, camera));
+  composer = new EffectComposer(renderer);
+  composer.addPass(new RenderPass(scene, camera));
   composer.addPass(effectPass);
 }
 
 export function handleLights() {
-  let directionalLight = new THREE.DirectionalLight(0xff8c19);
-  directionalLight.position.set(0, 0, 1);
-  scene.add(directionalLight);
-
-  let orangeLight = new THREE.PointLight(0xcc6600, 50, 450, 1.7);
-  orangeLight.position.set(200, 300, 100);
-  scene.add(orangeLight);
-  let redLight = new THREE.PointLight(0xd8547e, 50, 450, 1.7);
-  redLight.position.set(100, 300, 100);
-  scene.add(redLight);
-  let blueLight = new THREE.PointLight(0x3677ac, 50, 450, 1.7);
-  blueLight.position.set(300, 300, 200);
-  scene.add(blueLight);
+  // let directionalLight = new THREE.DirectionalLight(0xff8c19);
+  // directionalLight.position.set(0, 0, 1);
+  // scene.add(directionalLight);
+  const color1 = { color: 0xcc6600 };
+  const color2 = { color: 0xd8547e };
+  const color3 = { color: 0x3677ac };
+  let light1 = new THREE.PointLight(color1.color, 50, 750, 1.7);
+  light1.position.set(Math.random() * 400 - 200, 420, Math.random() * 250 - 500);
+  scene.add(light1);
+  let light2 = new THREE.PointLight(color2.color, 50, 750, 1.7);
+  light2.position.set(Math.random() * 400 - 200, 420, Math.random() * 250 - 500);
+  scene.add(light2);
+  let light3 = new THREE.PointLight(color3.color, 50, 750, 1.7);
+  light3.position.set(Math.random() * 400 - 200, 420, Math.random() * 250 - 500);
+  scene.add(light3);
+  // debug
+  lightingFolder
+    .addColor(color1, "color")
+    .name("Color1")
+    .onChange(() => {
+      light1.color.set(color1.color);
+    });
+  lightingFolder
+    .addColor(color2, "color")
+    .name("Color2")
+    .onChange(() => {
+      light2.color.set(color2.color);
+    });
+  lightingFolder
+    .addColor(color3, "color")
+    .name("Color3")
+    .onChange(() => {
+      light3.color.set(color3.color);
+    });
+  lightingFolder.add(light1.position, "y", 200, 500).onChange(() => {
+    light2.position.y = light1.position.y;
+    light3.position.y = light1.position.y;
+  });
 }
 
 function render() {
   cloudParticles.forEach((p) => {
     p.rotation.z += p.rotation.delta;
   });
-  composer.render(0.3);
+  composer.render(0.1);
   requestAnimationFrame(render);
 }
 

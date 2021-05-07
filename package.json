@@ -10,6 +10,7 @@
     "postprocessing": "^6.21.4",
     "three": "^0.128.0",
     "vue": "^3.0.11",
+    "vuex": "^4.0.0",
     "webmidi": "^2.5.1"
   },
   "devDependencies": {

@@ -82,6 +82,19 @@ $primary-background-color: rgb(44, 44, 44);
   background: rgb(90, 90, 90);
   padding: 0.5rem 1rem;
 
+  .ip-input {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: center;
+    margin-left: 0.5rem;
+
+    input {
+      margin-left: 0.5rem;
+      width: 100%;
+    }
+  }
+
   .wled-device {
     margin: 0.5rem 0;
     display: grid;

@@ -1,5 +1,6 @@
 <template>
   <div class="App">
+    <CloudSimulation />
     <div class="workspace-grid">
       <div class="header">WLED Scene Performance</div>
       <WledFinder />
@@ -9,22 +10,14 @@
 
 <script>
 import WledFinder from "./components/WledFinder";
-// import "./utils/three";
-import { initCloud } from "./cloudWebGL";
+import CloudSimulation from "./components/CloudSimulation";
 import "./App.scss";
 
 export default {
   name: "App",
   components: {
     WledFinder,
-  },
-  data() {
-    return {
-      message: "Learn Vue",
-    };
-  },
-  mounted() {
-    if (!document.body.querySelector("canvas")) initCloud();
+    CloudSimulation,
   },
 };
 </script>

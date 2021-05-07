@@ -11,9 +11,7 @@ import * as THREE from "three";
 import * as dat from "dat.gui";
 
 // Debug
-const gui = new dat.GUI();
-const lightingFolder = gui.addFolder("Lighting");
-const positionFolder = gui.addFolder("Position");
+let gui, lightingFolder, positionFolder;
 
 let scene,
   camera,
@@ -21,13 +19,26 @@ let scene,
   composer,
   cloudParticles = [];
 
+function initGui() {
+  gui = new dat.GUI();
+  lightingFolder = gui.addFolder("Lighting");
+  positionFolder = gui.addFolder("Position");
+}
+
 export function initCloud() {
+  initGui();
   scene = new THREE.Scene();
   camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 1000);
   camera.position.z = 1;
   camera.rotation.x = 1.16;
   camera.rotation.y = -0.12;
   camera.rotation.z = 0.27;
+
+  positionFolder.add(camera.position, "x", -200, 1000);
+  positionFolder.add(camera.position, "y", -200, 1000);
+  positionFolder.add(camera.position, "z", -200, 1000);
+  positionFolder.add(camera.rotation, "x", -1, 2);
+  positionFolder.add(camera.rotation, "y", -0.2, 0.2);
 
   let ambient = new THREE.AmbientLight(0x555555);
   scene.add(ambient);
@@ -38,7 +49,7 @@ export function initCloud() {
   renderer.setSize(window.innerWidth, window.innerHeight);
   scene.fog = new THREE.FogExp2(0x222222, 0.001);
   renderer.setClearColor(scene.fog.color);
-  document.body.appendChild(renderer.domElement);
+  // document.body.appendChild(renderer.domElement);
 
   let loader = new THREE.TextureLoader();
 
@@ -67,6 +78,7 @@ export function initCloud() {
   window.addEventListener("resize", onWindowResize);
 
   render();
+  return renderer.domElement;
 }
 
 function handleComposer() {

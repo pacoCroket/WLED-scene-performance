@@ -3,9 +3,7 @@
     <span> WLED Finder</span>
 
     <div class="wled-device-list">
-      <div
-        style="display: flex; justifycontent: space-between; alignitems: center"
-      >
+      <div class="button-wrapper">
         <button
           @click="findWled()"
           :class="{ loading: isSearching }"
@@ -13,15 +11,8 @@
         >
           Scan
         </button>
-        <span
-          style="
-            display: flex;
-            flexWrap: nowrap;
-            justifyContent: space-between;
-            alignItems: center;
-            margin: 0 0.5rem;
-          "
-          >IP: <input type="text" style="margin: 0 0.5rem" v-model="localIp"
+        <span class="ip-input"
+          >IP: <input type="text" v-model="localIp"
         /></span>
       </div>
       <WledDevice
@@ -103,4 +94,9 @@ export default {
 </script>
 
 <style>
+.button-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 </style>

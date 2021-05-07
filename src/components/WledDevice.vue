@@ -16,10 +16,12 @@
 </template>
 
 <script>
+// import { mapMutations } from "vuex";
 export default {
   name: "WledDevice",
   props: {
     data: Object,
+    // index: Number,
   },
   data() {
     return {
@@ -38,6 +40,12 @@ export default {
       this.connection.send(JSON.stringify({ lv: true }));
     };
   },
+  // methods: {
+  //   ...mapMutations(["setColors"]),
+  // },
+  // watch: {
+  //   colors: (colors) => this.index === 0 && setColors(colors), // only the first device sets the colors
+  // },
 };
 </script>
 

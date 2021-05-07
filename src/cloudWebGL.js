@@ -41,7 +41,7 @@ export function initCloud() {
   positionFolder.add(camera.rotation, "x", -1, 2);
   positionFolder.add(camera.rotation, "y", -0.2, 0.2);
 
-  let ambient = new THREE.AmbientLight(0x555555);
+  let ambient = new THREE.AmbientLight(0xaaaaaa, 1);
   scene.add(ambient);
 
   handleLights();
@@ -50,7 +50,6 @@ export function initCloud() {
   renderer.setSize(window.innerWidth, window.innerHeight);
   scene.fog = new THREE.FogExp2(0x222222, 0.001);
   renderer.setClearColor(scene.fog.color);
-  // document.body.appendChild(renderer.domElement);
 
   let loader = new THREE.TextureLoader();
 
@@ -61,9 +60,9 @@ export function initCloud() {
       transparent: true,
     });
 
-    for (let p = 0; p < 10; p++) {
+    for (let p = 0; p < 30; p++) {
       let cloud = new THREE.Mesh(cloudGeo, cloudMaterial);
-      cloud.position.set(Math.random() * 400 - 200, 500, Math.random() * 250 - 500);
+      cloud.position.set(Math.random() * 800 - 400, 480 + Math.random() * 40, Math.random() * 500 - 600);
       cloud.rotation.x = 1.16;
       cloud.rotation.y = -0.12;
       cloud.rotation.z = Math.random() * 2 * Math.PI;
@@ -87,10 +86,10 @@ function handleComposer() {
     blendFunction: BlendFunction.SOFT_LIGHT,
     kernelSize: KernelSize.SMALL,
     useLuminanceFilter: true,
-    luminanceThreshold: 0.3,
+    luminanceThreshold: 0.2,
     luminanceSmoothing: 0.75,
   });
-  bloomEffect.blendMode.opacity.value = 1.5;
+  bloomEffect.blendMode.opacity.value = 0.5;
   lightingFolder.add(bloomEffect.blendMode.opacity, "value", 0, 10).name("BlendModeOpacity");
 
   let effectPass = new EffectPass(camera, bloomEffect);
@@ -115,8 +114,9 @@ export function handleLights() {
   scene.add(directionalLight);
 
   for (let i = 0; i < 30; i++) {
-    const light = new THREE.PointLight(0x000000, 50, 750, 1.7);
-    light.position.set(Math.random() * 400 - 200, 420, Math.random() * 250 - 500);
+    const light = new THREE.PointLight(0x000000, 150, 12000, 200);
+    light.power = 800;
+    light.position.set(-500 + i * 30, Math.random() * 20 + 400, Math.random() * 250 - 400);
     scene.add(light);
     const pointLightHelper = new THREE.PointLightHelper(light, 2);
     scene.add(pointLightHelper);
@@ -124,43 +124,43 @@ export function handleLights() {
   }
 
   // debug
-  lightingFolder.add(lightParticles[0].position, "x", 0, 200).onChange(() => {
-    for (let i = 0; i < lightParticles.length; i++) {
-      const light = lightParticles[i];
-      light.position.x = lightParticles[0].position.x;
-    }
-  });
-  lightingFolder.add(lightParticles[0].position, "y", 200, 500).onChange(() => {
-    for (let i = 0; i < lightParticles.length; i++) {
-      const light = lightParticles[i];
-      light.position.y = lightParticles[0].position.y;
-    }
-  });
-  lightingFolder.add(lightParticles[0].position, "z", -500, 200).onChange(() => {
-    for (let i = 0; i < lightParticles.length; i++) {
-      const light = lightParticles[i];
-      light.position.z = lightParticles[0].position.z;
-    }
-  });
-  lightingFolder.add(lightParticles[0], "distance", 0, 2000).onChange(() => {
+  // lightingFolder.add(lightParticles[0].position, "x", 0, 200).onChange(() => {
+  //   for (let i = 0; i < lightParticles.length; i++) {
+  //     const light = lightParticles[i];
+  //     light.position.x = lightParticles[0].position.x;
+  //   }
+  // });
+  // lightingFolder.add(lightParticles[0].position, "y", 200, 500).onChange(() => {
+  //   for (let i = 0; i < lightParticles.length; i++) {
+  //     const light = lightParticles[i];
+  //     light.position.y = lightParticles[0].position.y;
+  //   }
+  // });
+  // lightingFolder.add(lightParticles[0].position, "z", -500, 200).onChange(() => {
+  //   for (let i = 0; i < lightParticles.length; i++) {
+  //     const light = lightParticles[i];
+  //     light.position.z = lightParticles[0].position.z;
+  //   }
+  // });
+  lightingFolder.add(lightParticles[0], "distance", 0, 80000).onChange(() => {
     for (let i = 0; i < lightParticles.length; i++) {
       const light = lightParticles[i];
       light.distance = lightParticles[0].distance;
     }
   });
-  lightingFolder.add(lightParticles[0], "decay", 0, 4).onChange(() => {
+  lightingFolder.add(lightParticles[0], "decay", 0, 800).onChange(() => {
     for (let i = 0; i < lightParticles.length; i++) {
       const light = lightParticles[i];
       light.decay = lightParticles[0].decay;
     }
   });
-  lightingFolder.add(lightParticles[0], "power", 0, 2000).onChange(() => {
+  lightingFolder.add(lightParticles[0], "power", 0, 3000).onChange(() => {
     for (let i = 0; i < lightParticles.length; i++) {
       const light = lightParticles[i];
       light.power = lightParticles[0].power;
     }
   });
-  lightingFolder.add(lightParticles[0], "intensity", 0, 100).onChange(() => {
+  lightingFolder.add(lightParticles[0], "intensity", 0, 200).onChange(() => {
     for (let i = 0; i < lightParticles.length; i++) {
       const light = lightParticles[i];
       light.intensity = lightParticles[0].intensity;

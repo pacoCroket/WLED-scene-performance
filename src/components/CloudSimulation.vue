@@ -2,7 +2,7 @@
   <div ref="cloudSimulation" class="cloud-simulation"></div>
 </template>
 <script>
-import { initCloud } from "../cloudWebGL";
+import { initCloud, setLights } from "../cloudWebGL";
 
 export default {
   name: "CloudSimulation",
@@ -16,6 +16,16 @@ export default {
     if (existingCanvas) this.$refs.cloudSimulation.removeChild(existingCanvas);
     this.threeNode = initCloud();
     this.$refs.cloudSimulation.appendChild(this.threeNode);
+  },
+  computed: {
+    colors() {
+      return this.$store.getters.colors;
+    },
+  },
+  watch: {
+    colors(colors) {
+      if (colors?.length > 0) setLights(colors);
+    },
   },
 };
 </script>

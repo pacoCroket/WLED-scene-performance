@@ -1,6 +1,6 @@
 <template>
   <div class="wled-device">
-    <span class="name">{{ data.name }} </span>
+    <span class="name">{{ index }} - {{ data.name }} </span>
     <a class="ip-link" v-bind:href="'http://' + data.ip" target="_blank">{{
       data.ip
     }}</a>
@@ -16,12 +16,12 @@
 </template>
 
 <script>
-// import { mapMutations } from "vuex";
+import { mapMutations } from "vuex";
 export default {
   name: "WledDevice",
   props: {
     data: Object,
-    // index: Number,
+    index: Number,
   },
   data() {
     return {
@@ -40,12 +40,14 @@ export default {
       this.connection.send(JSON.stringify({ lv: true }));
     };
   },
-  // methods: {
-  //   ...mapMutations(["setColors"]),
-  // },
-  // watch: {
-  //   colors: (colors) => this.index === 0 && setColors(colors), // only the first device sets the colors
-  // },
+  methods: {
+    ...mapMutations(["setColors"]),
+  },
+  watch: {
+    colors: function (colors) {
+      this.index === 0 && this.$store.commit("setColors", colors);
+    }, // only the first device sets the colors
+  },
 };
 </script>
 

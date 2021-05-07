@@ -17,7 +17,8 @@ let scene,
   camera,
   renderer,
   composer,
-  cloudParticles = [];
+  cloudParticles = [],
+  lightParticles = [];
 
 function initGui() {
   gui = new dat.GUI();
@@ -100,44 +101,70 @@ function handleComposer() {
   composer.addPass(effectPass);
 }
 
+export function setLights(colors) {
+  for (let i = 0; i < colors.length; i++) {
+    // limit the lights to defined light particles
+    if (i >= lightParticles.length) break;
+    lightParticles[i].color.setStyle(colors[i]);
+  }
+}
+
 export function handleLights() {
-  // let directionalLight = new THREE.DirectionalLight(0xff8c19);
-  // directionalLight.position.set(0, 0, 1);
-  // scene.add(directionalLight);
-  const color1 = { color: 0xcc6600 };
-  const color2 = { color: 0xd8547e };
-  const color3 = { color: 0x3677ac };
-  let light1 = new THREE.PointLight(color1.color, 50, 750, 1.7);
-  light1.position.set(Math.random() * 400 - 200, 420, Math.random() * 250 - 500);
-  scene.add(light1);
-  let light2 = new THREE.PointLight(color2.color, 50, 750, 1.7);
-  light2.position.set(Math.random() * 400 - 200, 420, Math.random() * 250 - 500);
-  scene.add(light2);
-  let light3 = new THREE.PointLight(color3.color, 50, 750, 1.7);
-  light3.position.set(Math.random() * 400 - 200, 420, Math.random() * 250 - 500);
-  scene.add(light3);
+  let directionalLight = new THREE.DirectionalLight(0x333333);
+  directionalLight.position.set(0, 0, 1);
+  scene.add(directionalLight);
+
+  for (let i = 0; i < 30; i++) {
+    const light = new THREE.PointLight(0x000000, 50, 750, 1.7);
+    light.position.set(Math.random() * 400 - 200, 420, Math.random() * 250 - 500);
+    scene.add(light);
+    const pointLightHelper = new THREE.PointLightHelper(light, 2);
+    scene.add(pointLightHelper);
+    lightParticles.push(light);
+  }
+
   // debug
-  lightingFolder
-    .addColor(color1, "color")
-    .name("Color1")
-    .onChange(() => {
-      light1.color.set(color1.color);
-    });
-  lightingFolder
-    .addColor(color2, "color")
-    .name("Color2")
-    .onChange(() => {
-      light2.color.set(color2.color);
-    });
-  lightingFolder
-    .addColor(color3, "color")
-    .name("Color3")
-    .onChange(() => {
-      light3.color.set(color3.color);
-    });
-  lightingFolder.add(light1.position, "y", 200, 500).onChange(() => {
-    light2.position.y = light1.position.y;
-    light3.position.y = light1.position.y;
+  lightingFolder.add(lightParticles[0].position, "x", 0, 200).onChange(() => {
+    for (let i = 0; i < lightParticles.length; i++) {
+      const light = lightParticles[i];
+      light.position.x = lightParticles[0].position.x;
+    }
+  });
+  lightingFolder.add(lightParticles[0].position, "y", 200, 500).onChange(() => {
+    for (let i = 0; i < lightParticles.length; i++) {
+      const light = lightParticles[i];
+      light.position.y = lightParticles[0].position.y;
+    }
+  });
+  lightingFolder.add(lightParticles[0].position, "z", -500, 200).onChange(() => {
+    for (let i = 0; i < lightParticles.length; i++) {
+      const light = lightParticles[i];
+      light.position.z = lightParticles[0].position.z;
+    }
+  });
+  lightingFolder.add(lightParticles[0], "distance", 0, 2000).onChange(() => {
+    for (let i = 0; i < lightParticles.length; i++) {
+      const light = lightParticles[i];
+      light.distance = lightParticles[0].distance;
+    }
+  });
+  lightingFolder.add(lightParticles[0], "decay", 0, 4).onChange(() => {
+    for (let i = 0; i < lightParticles.length; i++) {
+      const light = lightParticles[i];
+      light.decay = lightParticles[0].decay;
+    }
+  });
+  lightingFolder.add(lightParticles[0], "power", 0, 2000).onChange(() => {
+    for (let i = 0; i < lightParticles.length; i++) {
+      const light = lightParticles[i];
+      light.power = lightParticles[0].power;
+    }
+  });
+  lightingFolder.add(lightParticles[0], "intensity", 0, 100).onChange(() => {
+    for (let i = 0; i < lightParticles.length; i++) {
+      const light = lightParticles[i];
+      light.intensity = lightParticles[0].intensity;
+    }
   });
 }
 

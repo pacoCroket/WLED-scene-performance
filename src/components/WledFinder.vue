@@ -16,9 +16,10 @@
         /></span>
       </div>
       <WledDevice
-        v-for="wledDevice in wledDevices"
+        v-for="(wledDevice, key, index) in wledDevices"
         :data="wledDevice"
-        :key="wledDevice.ip"
+        :key="key"
+        :index="index"
       />
     </div>
   </div>
@@ -75,7 +76,7 @@ export default {
             })
             .catch((err) => {
               // Do nothing
-              console.debug(err);
+              // console.debug(err);
             })
             .finally(() => {
               donePromises++;
@@ -85,7 +86,7 @@ export default {
             });
         } catch (err) {
           // Do nothing
-          console.debug(err);
+          // console.debug(err);
         }
       }
     },

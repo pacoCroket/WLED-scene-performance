@@ -3,13 +3,15 @@ const state = {
 };
 
 const getters = {
-  colors: (state) => state.colors,
+  colors: (state) => {
+    return state.colors;
+  },
 };
 
 const actions = {};
 
 const mutations = {
-  setColors(colors) {
+  setColors(state, colors) {
     state.colors = colors;
   },
 };

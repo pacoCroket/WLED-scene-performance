@@ -9,6 +9,7 @@ import {
 } from "postprocessing";
 import * as THREE from "three";
 import * as dat from "dat.gui";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
 // Debug
 let gui, lightingFolder, positionFolder;
@@ -17,6 +18,7 @@ let scene,
   camera,
   renderer,
   composer,
+  controls,
   cloudParticles = [],
   lightParticles = [];
 
@@ -30,10 +32,13 @@ export function initCloud() {
   initGui();
   scene = new THREE.Scene();
   camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 1000);
-  camera.position.z = 1;
-  camera.rotation.x = 1.16;
-  camera.rotation.y = -0.12;
-  camera.rotation.z = 0.27;
+  // camera.position.x = 100;
+  // camera.position.x = 100;
+  camera.position.y = -800;
+  // camera.position.z = -100;
+  // camera.rotation.x = 0.5;
+  // camera.rotation.y = Math.PI / 2;
+  // camera.rotation.z = 0.8;
 
   positionFolder.add(camera.position, "x", -200, 1000);
   positionFolder.add(camera.position, "y", -200, 1000);
@@ -41,14 +46,14 @@ export function initCloud() {
   positionFolder.add(camera.rotation, "x", -1, 2);
   positionFolder.add(camera.rotation, "y", -0.2, 0.2);
 
-  let ambient = new THREE.AmbientLight(0xaaaaaa, 1);
+  let ambient = new THREE.AmbientLight(0x666666, 1);
   scene.add(ambient);
 
   handleLights();
 
   renderer = new THREE.WebGLRenderer();
   renderer.setSize(window.innerWidth, window.innerHeight);
-  scene.fog = new THREE.FogExp2(0x222222, 0.001);
+  scene.fog = new THREE.FogExp2(0x111111, 0.001);
   renderer.setClearColor(scene.fog.color);
 
   let loader = new THREE.TextureLoader();
@@ -60,11 +65,15 @@ export function initCloud() {
       transparent: true,
     });
 
-    for (let p = 0; p < 30; p++) {
+    for (let p = 0; p < 10; p++) {
       let cloud = new THREE.Mesh(cloudGeo, cloudMaterial);
-      cloud.position.set(Math.random() * 800 - 400, 480 + Math.random() * 40, Math.random() * 500 - 600);
-      cloud.rotation.x = 1.16;
-      cloud.rotation.y = -0.12;
+      cloud.position.set(
+        300 * (Math.random() * 2 - 1),
+        20 * (Math.random() * 2 - 1),
+        200 * (Math.random() * 2 - 1)
+      );
+      cloud.rotation.x = Math.PI / 2;
+      // cloud.rotation.y = -0.12;
       cloud.rotation.z = Math.random() * 2 * Math.PI;
       cloud.material.opacity = 0.55;
       cloud.rotation.delta = (Math.random() * Math.round(Math.random()) * 2 - 1) * 0.0005;
@@ -74,7 +83,7 @@ export function initCloud() {
   });
 
   handleComposer();
-
+  controls = new OrbitControls(camera, renderer.domElement);
   window.addEventListener("resize", onWindowResize);
 
   render();
@@ -89,7 +98,7 @@ function handleComposer() {
     luminanceThreshold: 0.2,
     luminanceSmoothing: 0.75,
   });
-  bloomEffect.blendMode.opacity.value = 0.5;
+  bloomEffect.blendMode.opacity.value = 0.75;
   lightingFolder.add(bloomEffect.blendMode.opacity, "value", 0, 10).name("BlendModeOpacity");
 
   let effectPass = new EffectPass(camera, bloomEffect);
@@ -109,58 +118,47 @@ export function setLights(colors) {
 }
 
 export function handleLights() {
-  let directionalLight = new THREE.DirectionalLight(0x333333);
-  directionalLight.position.set(0, 0, 1);
+  let directionalLight = new THREE.DirectionalLight(0xffffff, 2);
+  directionalLight.position.set(0, -200, 0);
   scene.add(directionalLight);
+  const pointLightHelper = new THREE.DirectionalLightHelper(directionalLight, 2);
+  scene.add(pointLightHelper);
 
-  for (let i = 0; i < 30; i++) {
-    const light = new THREE.PointLight(0x000000, 150, 12000, 200);
-    light.power = 800;
-    light.position.set(-500 + i * 30, Math.random() * 20 + 400, Math.random() * 250 - 400);
+  lightingFolder.add(directionalLight, "intensity", 0, 10).name("dir intensiry");
+  const lightCount = 30;
+
+  for (let i = 0; i < lightCount; i++) {
+    const light = new THREE.PointLight(0xff0000, 25, 400, 4);
+    light.position.set(-500 + i * 30, -10 - Math.random() * 30, Math.random() * 300 - i * 10);
+
+    const pointLightHelper = new THREE.PointLightHelper(light, 2, 0x660000);
+
     scene.add(light);
-    const pointLightHelper = new THREE.PointLightHelper(light, 2);
     scene.add(pointLightHelper);
+
     lightParticles.push(light);
   }
 
   // debug
-  // lightingFolder.add(lightParticles[0].position, "x", 0, 200).onChange(() => {
-  //   for (let i = 0; i < lightParticles.length; i++) {
-  //     const light = lightParticles[i];
-  //     light.position.x = lightParticles[0].position.x;
-  //   }
-  // });
-  // lightingFolder.add(lightParticles[0].position, "y", 200, 500).onChange(() => {
-  //   for (let i = 0; i < lightParticles.length; i++) {
-  //     const light = lightParticles[i];
-  //     light.position.y = lightParticles[0].position.y;
-  //   }
-  // });
-  // lightingFolder.add(lightParticles[0].position, "z", -500, 200).onChange(() => {
-  //   for (let i = 0; i < lightParticles.length; i++) {
-  //     const light = lightParticles[i];
-  //     light.position.z = lightParticles[0].position.z;
-  //   }
-  // });
-  lightingFolder.add(lightParticles[0], "distance", 0, 80000).onChange(() => {
+  lightingFolder.add(lightParticles[0], "distance", 0, 1000).onChange(() => {
     for (let i = 0; i < lightParticles.length; i++) {
       const light = lightParticles[i];
       light.distance = lightParticles[0].distance;
     }
   });
-  lightingFolder.add(lightParticles[0], "decay", 0, 800).onChange(() => {
+  lightingFolder.add(lightParticles[0], "decay", 0, 200).onChange(() => {
     for (let i = 0; i < lightParticles.length; i++) {
       const light = lightParticles[i];
       light.decay = lightParticles[0].decay;
     }
   });
-  lightingFolder.add(lightParticles[0], "power", 0, 3000).onChange(() => {
-    for (let i = 0; i < lightParticles.length; i++) {
-      const light = lightParticles[i];
-      light.power = lightParticles[0].power;
-    }
-  });
-  lightingFolder.add(lightParticles[0], "intensity", 0, 200).onChange(() => {
+  // lightingFolder.add(lightParticles[0], "power", 0, 200).onChange(() => {
+  //   for (let i = 0; i < lightParticles.length; i++) {
+  //     const light = lightParticles[i];
+  //     light.power = lightParticles[0].power;
+  //   }
+  // });
+  lightingFolder.add(lightParticles[0], "intensity", 0, 100).onChange(() => {
     for (let i = 0; i < lightParticles.length; i++) {
       const light = lightParticles[i];
       light.intensity = lightParticles[0].intensity;
@@ -172,6 +170,7 @@ function render() {
   cloudParticles.forEach((p) => {
     p.rotation.z += p.rotation.delta;
   });
+  controls.update();
   composer.render(0.1);
   requestAnimationFrame(render);
 }

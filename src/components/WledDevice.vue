@@ -30,15 +30,19 @@ export default {
     };
   },
   created() {
-    this.connection = new WebSocket("ws://" + this.data.ip + "/ws");
+    try {
+      this.connection = new WebSocket("ws://" + this.data.ip + "/ws");
 
-    this.connection.onmessage = (event) => {
-      this.colors = JSON.parse(event.data).leds?.map((it) => "#" + it);
-    };
+      this.connection.onmessage = (event) => {
+        this.colors = JSON.parse(event.data).leds?.map((it) => "#" + it);
+      };
 
-    this.connection.onopen = () => {
-      this.connection.send(JSON.stringify({ lv: true }));
-    };
+      this.connection.onopen = () => {
+        this.connection.send(JSON.stringify({ lv: true }));
+      };
+    } catch (err) {
+      console.log(err);
+    }
   },
   methods: {
     ...mapMutations(["setColors"]),

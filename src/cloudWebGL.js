@@ -54,7 +54,7 @@ export function initCloud() {
   let loader = new THREE.TextureLoader();
 
   loader.load(smokeRef, (texture) => {
-    const cloudGeo = new THREE.PlaneBufferGeometry(500, 500);
+    const cloudGeo = new THREE.PlaneBufferGeometry(500, 500, 32, 32);
     const cloudMaterial = new THREE.MeshLambertMaterial({
       map: texture,
       transparent: true,

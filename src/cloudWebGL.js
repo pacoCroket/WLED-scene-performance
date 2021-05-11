@@ -123,15 +123,20 @@ export function handleLights() {
   lightingFolder.add(directionalLight, "intensity", 0, 10).name("dir intensiry");
   const lightCount = 30;
 
+  let xFactor, zFactor;
   for (let i = 0; i < lightCount; i++) {
-    const light = new THREE.PointLight(0xff0000, 40, 420, 16);
-    // light.power = 30;
-    light.position.set(-500 + i * 30, -Math.random() * 30, Math.random() * 300 - i * 10);
+    const light = new THREE.PointLight(0xff0000, 30, 250, 5);
+    if (i % 3 == 0) {
+      xFactor = 40 * (i * 0.2 + (Math.random() - 0.5));
+      zFactor = 600 * (0.4 * randn_bm() + 0.6 * Math.random() - 0.5);
+    }
+
+    light.position.set(-600 + i * 30 + xFactor, -Math.random() * 20, zFactor + Math.random() * 100);
     scene.add(light);
     lightParticles.push(light);
 
-    // const pointLightHelper = new THREE.PointLightHelper(light, 2, 0x660000);
-    // scene.add(pointLightHelper);
+    const pointLightHelper = new THREE.PointLightHelper(light, 2, 0x660000);
+    scene.add(pointLightHelper);
   }
 
   // debug

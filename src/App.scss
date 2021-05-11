@@ -111,6 +111,10 @@ $primary-background-color: rgb(44, 44, 44);
       grid-area: name;
     }
 
+    .sync-on {
+      font-weight: 600;
+    }
+
     .ip-link {
       grid-area: ip;
       justify-self: end;

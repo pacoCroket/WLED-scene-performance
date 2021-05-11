@@ -53,13 +53,13 @@ export function initCloud() {
 
   renderer = new THREE.WebGLRenderer();
   renderer.setSize(window.innerWidth, window.innerHeight);
-  scene.fog = new THREE.FogExp2(0x111111, 0.001);
+  scene.fog = new THREE.FogExp2(0x050505, 0.001);
   renderer.setClearColor(scene.fog.color);
 
   let loader = new THREE.TextureLoader();
 
   loader.load(smokeRef, (texture) => {
-    const cloudGeo = new THREE.PlaneBufferGeometry(500, 500, 16, 16);
+    const cloudGeo = new THREE.PlaneBufferGeometry(600, 600, 16, 16);
     const cloudMaterial = new THREE.MeshLambertMaterial({
       map: texture,
       transparent: true,
@@ -67,7 +67,7 @@ export function initCloud() {
 
     for (let p = 0; p < 15; p++) {
       let cloud = new THREE.Mesh(cloudGeo, cloudMaterial);
-      cloud.position.set(1000 * (randn_bm() * 2 - 1), 20 * Math.random(), 500 * (randn_bm() * 2 - 1));
+      cloud.position.set(1400 * (randn_bm() * 2 - 1), 50 * Math.random(), 600 * (randn_bm() * 2 - 1));
       cloud.rotation.x = Math.PI / 2;
       // cloud.rotation.y = -0.12;
       cloud.rotation.z = Math.random() * 2 * Math.PI;
@@ -94,7 +94,7 @@ function handleComposer() {
     luminanceThreshold: 0.2,
     luminanceSmoothing: 0.75,
   });
-  bloomEffect.blendMode.opacity.value = 0.75;
+  bloomEffect.blendMode.opacity.value = 0.9;
   lightingFolder.add(bloomEffect.blendMode.opacity, "value", 0, 10).name("BlendModeOpacity");
 
   let effectPass = new EffectPass(camera, bloomEffect);
@@ -117,23 +117,21 @@ export function handleLights() {
   let directionalLight = new THREE.DirectionalLight(0xffffff, 1.5);
   directionalLight.position.set(0, -200, 0);
   scene.add(directionalLight);
-  const pointLightHelper = new THREE.DirectionalLightHelper(directionalLight, 2);
-  scene.add(pointLightHelper);
+  // const pointLightHelper = new THREE.DirectionalLightHelper(directionalLight, 2);
+  // scene.add(pointLightHelper);
 
   lightingFolder.add(directionalLight, "intensity", 0, 10).name("dir intensiry");
   const lightCount = 30;
 
   for (let i = 0; i < lightCount; i++) {
-    const light = new THREE.PointLight(0xff0000, 40, 400, 8);
+    const light = new THREE.PointLight(0xff0000, 40, 420, 16);
     // light.power = 30;
     light.position.set(-500 + i * 30, -Math.random() * 30, Math.random() * 300 - i * 10);
-
-    const pointLightHelper = new THREE.PointLightHelper(light, 2, 0x660000);
-
     scene.add(light);
-    scene.add(pointLightHelper);
-
     lightParticles.push(light);
+
+    // const pointLightHelper = new THREE.PointLightHelper(light, 2, 0x660000);
+    // scene.add(pointLightHelper);
   }
 
   // debug

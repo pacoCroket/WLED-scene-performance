@@ -25,12 +25,12 @@ $primary-background-color: rgb(44, 44, 44);
   height: 100%;
   width: 100%;
   display: grid;
-  grid-template-columns: max(200px, 20%) auto;
+  grid-template-columns: auto max(200px, 20%);
   grid-template-rows: 50px 1fr 1fr 50px;
   grid-template-areas:
     "header header"
-    "devices simulation"
-    "devices simulation"
+    "simulation devices"
+    "simulation devices"
     "footer footer";
   column-gap: 22px;
   row-gap: 15px;
@@ -50,7 +50,6 @@ $primary-background-color: rgb(44, 44, 44);
 
   .devices-grouping {
     grid-area: devices;
-    z-index: 1;
   }
 
   .footer {
@@ -59,11 +58,12 @@ $primary-background-color: rgb(44, 44, 44);
 }
 /* CANVAS */
 .cloud-simulation {
-  // position: absolute;
-  // left: 0;
-  // top: 0;
-  // width: 100vw;
-  // height: 100vh;
+  z-index: -1;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
   grid-area: simulation;
 }
 
@@ -81,7 +81,6 @@ $primary-background-color: rgb(44, 44, 44);
 }
 
 .wled-device-list {
-  z-index: 20;
   background: rgb(90, 90, 90);
   padding: 0.5rem 1rem;
 

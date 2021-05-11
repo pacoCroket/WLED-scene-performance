@@ -70,7 +70,17 @@ export default {
                   ...this.wledDevices,
                   [ip]: { ip, ...body },
                 };
-                // dispatch(setWledDevice({ ...body, ip, controlGroupId: null })); //  TODO util to construct a new wled device
+                // extend wled data with state
+                axios("http://" + ip + "/json/state").then((res) => {
+                  if (res.statusText === "OK") {
+                    const body = res.data;
+                    this.wledDevices[ip] = {
+                      ...this.wledDevices[ip],
+                      ...body,
+                    };
+                  }
+                });
+
                 console.log(ip, "success");
               }
             })

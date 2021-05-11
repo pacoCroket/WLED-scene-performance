@@ -1,6 +1,7 @@
 <template>
   <div class="wled-device">
-    <span class="name">{{ index }} - {{ data.name }} </span>
+    <span class="name">{{ data.name }}{{ data.udpn?.send ? " [M]" : "" }}</span>
+    <!-- <span v-if="data.ws">[master]</span> -->
     <a class="ip-link" v-bind:href="'http://' + data.ip" target="_blank">{{
       data.ip
     }}</a>

@@ -34,19 +34,19 @@ export default {
     };
   },
   created() {
-    try {
-      this.connection = new WebSocket("ws://" + this.data.ip + "/ws");
+    this.connection = new WebSocket("ws://" + this.data.ip + "/ws");
 
-      this.connection.onmessage = (event) => {
+    this.connection.onmessage = (event) => {
+      try {
         this.colors = JSON.parse(event.data).leds?.map((it) => "#" + it);
-      };
+      } catch (err) {
+        console.log(err);
+      }
+    };
 
-      this.connection.onopen = () => {
-        this.connection.send(JSON.stringify({ lv: true }));
-      };
-    } catch (err) {
-      console.log(err);
-    }
+    this.connection.onopen = () => {
+      this.connection.send(JSON.stringify({ lv: true }));
+    };
   },
   methods: {
     ...mapMutations(["setColors"]),

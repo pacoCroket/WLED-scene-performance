@@ -1,9 +1,9 @@
 <template>
   <div class="App">
     <div class="workspace-grid">
-      <CloudSimulation />
       <div class="header">WLED Scene Performance</div>
       <WledFinder />
+      <CloudSimulation />
     </div>
   </div>
 </template>

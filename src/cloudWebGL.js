@@ -19,22 +19,26 @@ let scene,
   renderer,
   composer,
   controls,
+  parentNode,
   cloudParticles = [],
   lightParticles = [];
 
 function initGui() {
+  // remove prev GUI
+  document.querySelector(".dg.main.a")?.remove();
   gui = new dat.GUI();
   lightingFolder = gui.addFolder("Lighting");
   positionFolder = gui.addFolder("Position");
 }
 
-export function initCloud() {
+export function initCloud(_parentNode) {
+  parentNode = _parentNode;
   initGui();
   scene = new THREE.Scene();
-  camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 1000);
+  camera = new THREE.PerspectiveCamera(60, parentNode.offsetWidth / parentNode.offsetHeight, 1, 1000);
   // camera.position.x = 100;
   // camera.position.x = 100;
-  camera.position.y = -800;
+  camera.position.y = -808;
   // camera.position.z = -100;
   // camera.rotation.x = 0.5;
   // camera.rotation.y = Math.PI / 2;
@@ -63,7 +67,11 @@ export function initCloud() {
     const cloudMaterial = new THREE.MeshLambertMaterial({
       map: texture,
       transparent: true,
+      opacity: 0.8,
+      side: THREE.DoubleSide,
     });
+
+    positionFolder.add(cloudMaterial, "opacity", 0, 1);
 
     for (let p = 0; p < 15; p++) {
       let cloud = new THREE.Mesh(cloudGeo, cloudMaterial);
@@ -80,6 +88,8 @@ export function initCloud() {
 
   handleComposer();
   controls = new OrbitControls(camera, renderer.domElement);
+
+  renderer.setSize(parentNode.offsetWidth, parentNode.offsetHeight);
   window.addEventListener("resize", onWindowResize);
 
   render();
@@ -125,13 +135,13 @@ export function handleLights() {
 
   let xFactor, zFactor;
   for (let i = 0; i < lightCount; i++) {
-    const light = new THREE.PointLight(0xff0000, 30, 250, 5);
+    const light = new THREE.PointLight(0xff0000, 30, 400, 4);
     if (i % 3 == 0) {
       xFactor = 40 * (i * 0.2 + (Math.random() - 0.5));
       zFactor = 600 * (0.4 * randn_bm() + 0.6 * Math.random() - 0.5);
     }
 
-    light.position.set(-600 + i * 30 + xFactor, -Math.random() * 20, zFactor + Math.random() * 100);
+    light.position.set(-600 + i * 30 + xFactor, 20 - Math.random() * 20, zFactor + Math.random() * 100);
     scene.add(light);
     lightParticles.push(light);
 
@@ -140,6 +150,11 @@ export function handleLights() {
   }
 
   // debug
+  lightingFolder.add(lightParticles[0].position, "y", -100, 100).onChange(() => {
+    for (let i = 0; i < lightParticles.length; i++) {
+      lightParticles[i].distance = lightParticles[0].position.y;
+    }
+  });
   lightingFolder.add(lightParticles[0], "distance", 0, 1000).onChange(() => {
     for (let i = 0; i < lightParticles.length; i++) {
       const light = lightParticles[i];
@@ -176,9 +191,9 @@ function render() {
 }
 
 function onWindowResize() {
-  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.aspect = parentNode.offsetWidth / parentNode.offsetHeight;
   camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setSize(parentNode.offsetWidth, parentNode.offsetHeight);
 }
 
 function randn_bm() {

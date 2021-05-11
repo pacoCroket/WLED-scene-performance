@@ -7,6 +7,7 @@
         <button
           @click="findWled()"
           :class="{ loading: isSearching }"
+          :disabled="isSearching"
           class="btn"
         >
           Scan

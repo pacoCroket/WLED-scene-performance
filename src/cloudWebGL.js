@@ -145,8 +145,8 @@ export function handleLights() {
     scene.add(light);
     lightParticles.push(light);
 
-    const pointLightHelper = new THREE.PointLightHelper(light, 2, 0x660000);
-    scene.add(pointLightHelper);
+    // const pointLightHelper = new THREE.PointLightHelper(light, 2, 0x660000);
+    // scene.add(pointLightHelper);
   }
 
   // debug

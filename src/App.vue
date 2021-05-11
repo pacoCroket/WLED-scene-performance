@@ -4,6 +4,7 @@
       <div class="header">WLED Scene Performance</div>
       <WledFinder />
       <CloudSimulation />
+      <Footer />
     </div>
   </div>
 </template>
@@ -11,6 +12,7 @@
 <script>
 import WledFinder from "./components/WledFinder";
 import CloudSimulation from "./components/CloudSimulation";
+import Footer from "./components/Footer";
 import "./App.scss";
 
 export default {
@@ -18,6 +20,7 @@ export default {
   components: {
     WledFinder,
     CloudSimulation,
+    Footer,
   },
 };
 </script>

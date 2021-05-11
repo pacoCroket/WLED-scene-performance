@@ -52,13 +52,32 @@ export function initCloud(_parentNode) {
 
   let ambient = new THREE.AmbientLight(0xffffff, 1);
   scene.add(ambient);
+  let directionalLight = new THREE.DirectionalLight(0xffffff, 1.5);
+  directionalLight.position.set(0, -200, 0);
+  scene.add(directionalLight);
 
-  handleLights();
+  generateLights();
 
   renderer = new THREE.WebGLRenderer();
   renderer.setSize(window.innerWidth, window.innerHeight);
   scene.fog = new THREE.FogExp2(0x050505, 0.001);
   renderer.setClearColor(scene.fog.color);
+
+  generateClouds();
+
+  handleComposer();
+  controls = new OrbitControls(camera, renderer.domElement);
+
+  renderer.setSize(parentNode.offsetWidth, parentNode.offsetHeight);
+  window.addEventListener("resize", onWindowResize);
+
+  render();
+  return renderer.domElement;
+}
+
+export function generateClouds() {
+  // remove prev clouds
+  cloudParticles.forEach((cloud) => scene.remove(cloud));
 
   let loader = new THREE.TextureLoader();
 
@@ -85,15 +104,6 @@ export function initCloud(_parentNode) {
       scene.add(cloud);
     }
   });
-
-  handleComposer();
-  controls = new OrbitControls(camera, renderer.domElement);
-
-  renderer.setSize(parentNode.offsetWidth, parentNode.offsetHeight);
-  window.addEventListener("resize", onWindowResize);
-
-  render();
-  return renderer.domElement;
 }
 
 function handleComposer() {
@@ -123,15 +133,10 @@ export function setLights(colors) {
   }
 }
 
-export function handleLights() {
-  let directionalLight = new THREE.DirectionalLight(0xffffff, 1.5);
-  directionalLight.position.set(0, -200, 0);
-  scene.add(directionalLight);
-  // const pointLightHelper = new THREE.DirectionalLightHelper(directionalLight, 2);
-  // scene.add(pointLightHelper);
-
-  lightingFolder.add(directionalLight, "intensity", 0, 10).name("dir intensiry");
-  const lightCount = 30;
+export function generateLights(lightCount = 30) {
+  // remove previous
+  lightParticles.forEach((light) => scene.remove(light));
+  lightParticles = [];
 
   let xFactor, zFactor;
   for (let i = 0; i < lightCount; i++) {

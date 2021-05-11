@@ -46,7 +46,7 @@ export function initCloud() {
   positionFolder.add(camera.rotation, "x", -1, 2);
   positionFolder.add(camera.rotation, "y", -0.2, 0.2);
 
-  let ambient = new THREE.AmbientLight(0x666666, 1);
+  let ambient = new THREE.AmbientLight(0xffffff, 1);
   scene.add(ambient);
 
   handleLights();
@@ -59,19 +59,15 @@ export function initCloud() {
   let loader = new THREE.TextureLoader();
 
   loader.load(smokeRef, (texture) => {
-    const cloudGeo = new THREE.PlaneBufferGeometry(500, 500, 32, 32);
+    const cloudGeo = new THREE.PlaneBufferGeometry(500, 500, 16, 16);
     const cloudMaterial = new THREE.MeshLambertMaterial({
       map: texture,
       transparent: true,
     });
 
-    for (let p = 0; p < 10; p++) {
+    for (let p = 0; p < 15; p++) {
       let cloud = new THREE.Mesh(cloudGeo, cloudMaterial);
-      cloud.position.set(
-        300 * (Math.random() * 2 - 1),
-        20 * (Math.random() * 2 - 1),
-        200 * (Math.random() * 2 - 1)
-      );
+      cloud.position.set(1000 * (randn_bm() * 2 - 1), 20 * Math.random(), 500 * (randn_bm() * 2 - 1));
       cloud.rotation.x = Math.PI / 2;
       // cloud.rotation.y = -0.12;
       cloud.rotation.z = Math.random() * 2 * Math.PI;
@@ -118,7 +114,7 @@ export function setLights(colors) {
 }
 
 export function handleLights() {
-  let directionalLight = new THREE.DirectionalLight(0xffffff, 2);
+  let directionalLight = new THREE.DirectionalLight(0xffffff, 1.5);
   directionalLight.position.set(0, -200, 0);
   scene.add(directionalLight);
   const pointLightHelper = new THREE.DirectionalLightHelper(directionalLight, 2);
@@ -128,8 +124,9 @@ export function handleLights() {
   const lightCount = 30;
 
   for (let i = 0; i < lightCount; i++) {
-    const light = new THREE.PointLight(0xff0000, 25, 400, 4);
-    light.position.set(-500 + i * 30, -10 - Math.random() * 30, Math.random() * 300 - i * 10);
+    const light = new THREE.PointLight(0xff0000, 40, 400, 8);
+    // light.power = 30;
+    light.position.set(-500 + i * 30, -Math.random() * 30, Math.random() * 300 - i * 10);
 
     const pointLightHelper = new THREE.PointLightHelper(light, 2, 0x660000);
 
@@ -152,12 +149,12 @@ export function handleLights() {
       light.decay = lightParticles[0].decay;
     }
   });
-  // lightingFolder.add(lightParticles[0], "power", 0, 200).onChange(() => {
-  //   for (let i = 0; i < lightParticles.length; i++) {
-  //     const light = lightParticles[i];
-  //     light.power = lightParticles[0].power;
-  //   }
-  // });
+  lightingFolder.add(lightParticles[0], "power", 0, 200).onChange(() => {
+    for (let i = 0; i < lightParticles.length; i++) {
+      const light = lightParticles[i];
+      light.power = lightParticles[0].power;
+    }
+  });
   lightingFolder.add(lightParticles[0], "intensity", 0, 100).onChange(() => {
     for (let i = 0; i < lightParticles.length; i++) {
       const light = lightParticles[i];
@@ -179,4 +176,15 @@ function onWindowResize() {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
+}
+
+function randn_bm() {
+  let u = 0,
+    v = 0;
+  while (u === 0) u = Math.random(); //Converting [0,1) to (0,1)
+  while (v === 0) v = Math.random();
+  let num = Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
+  num = num / 10.0 + 0.5; // Translate to 0 -> 1
+  if (num > 1 || num < 0) return randn_bm(); // resample between 0 and 1
+  return num;
 }

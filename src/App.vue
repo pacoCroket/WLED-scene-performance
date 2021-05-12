@@ -22,10 +22,35 @@ export default {
     CloudSimulation,
     Footer,
   },
+  data() {
+    return {
+      hue: 0,
+      freqHue: 50,
+      interval: null,
+    };
+  },
+  created() {
+    this.interval = setInterval(() => this.runDeltaColor(), this.freqHue);
+  },
+  // unmounted() {
+  //   clearInterval(this.interval);
+  // },
+  methods: {
+    runDeltaColor() {
+      this.hue = (this.hue + 1) % 360;
+      document.documentElement.style.setProperty(
+        "--delta-font-color",
+        `hsl(${this.hue}, 60%, 50%)`
+      );
+    },
+  },
 };
 </script>
 
 <style>
+:root {
+  --delta-font-color: hsl(0, 0%, 0%);
+}
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
@@ -33,12 +58,15 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: rgb(44, 44, 44);
+  background: #131313;
   overflow-x: hidden;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
+}
+.header {
+  color: var(--delta-font-color);
 }
 </style>

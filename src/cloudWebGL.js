@@ -75,7 +75,7 @@ export function initCloud(_parentNode) {
   return renderer.domElement;
 }
 
-export function generateClouds() {
+export function generateClouds(cloudCount = 20) {
   // remove prev clouds
   cloudParticles.forEach((cloud) => scene.remove(cloud));
 
@@ -92,7 +92,7 @@ export function generateClouds() {
 
     positionFolder.add(cloudMaterial, "opacity", 0, 1);
 
-    for (let p = 0; p < 15; p++) {
+    for (let p = 0; p < cloudCount; p++) {
       let cloud = new THREE.Mesh(cloudGeo, cloudMaterial);
       cloud.position.set(1400 * (randn_bm() * 2 - 1), 50 * Math.random(), 600 * (randn_bm() * 2 - 1));
       cloud.rotation.x = Math.PI / 2;
@@ -140,7 +140,7 @@ export function generateLights(lightCount = 30) {
 
   let xFactor, zFactor;
   for (let i = 0; i < lightCount; i++) {
-    const light = new THREE.PointLight(0xff0000, 30, 400, 4);
+    const light = new THREE.PointLight(0x444444, 30, 400, 4);
     if (i % 3 == 0) {
       xFactor = 40 * (i * 0.2 + (Math.random() - 0.5));
       zFactor = 600 * (0.4 * randn_bm() + 0.6 * Math.random() - 0.5);

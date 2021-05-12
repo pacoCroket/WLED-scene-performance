@@ -1,5 +1,5 @@
 $primary-font-color: #f0f8ff;
-$primary-background-color: rgb(44, 44, 44);
+$primary-background-color: #131313;
 
 .App {
   text-align: center;
@@ -37,6 +37,7 @@ $primary-background-color: rgb(44, 44, 44);
 
   .header {
     grid-area: header;
+    color: --delta-font-color; // remove
     font-size: 2rem;
   }
 
@@ -98,7 +99,7 @@ $primary-background-color: rgb(44, 44, 44);
   }
 
   .wled-device {
-    margin: 0.5rem 0;
+    margin: 0.25rem 0;
     display: grid;
     grid-template-areas:
       "name ip"

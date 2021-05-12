@@ -29,12 +29,10 @@ export default {
       interval: null,
     };
   },
-  created() {
+  mounted() {
+    // if (this.interval) clearInterval(this.interval);
     this.interval = setInterval(() => this.runDeltaColor(), this.freqHue);
   },
-  // unmounted() {
-  //   clearInterval(this.interval);
-  // },
   methods: {
     runDeltaColor() {
       this.hue = (this.hue + 1) % 360;
@@ -67,6 +65,23 @@ code {
     monospace;
 }
 .header {
-  color: var(--delta-font-color);
+  font-size: 2.5rem;
+  font-weight: 600;
+  /* Fallback: Set a background color. */
+  background-color: var(--delta-font-color);
+
+  /* Create the gradient. */
+  background-image: linear-gradient(0deg, #0000009d, #00000000);
+
+  /* Set the background size and repeat properties. */
+  background-size: 100%;
+  background-repeat: repeat;
+
+  /* Use the text as a mask for the background. */
+  /* This will show the gradient as a text color rather than element bg. */
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -moz-background-clip: text;
+  -moz-text-fill-color: transparent;
 }
 </style>

@@ -21,6 +21,7 @@
         :data="wledDevice"
         :key="key"
         :index="index"
+        :foundTime="wledDevice.foundTime"
       />
     </div>
   </div>
@@ -69,7 +70,7 @@ export default {
                 const body = res.data;
                 this.wledDevices = {
                   ...this.wledDevices,
-                  [ip]: { ip, ...body },
+                  [ip]: { ip, ...body, foundTime: new Date() },
                 };
                 // extend wled data with state
                 axios("http://" + ip + "/json/state").then((res) => {

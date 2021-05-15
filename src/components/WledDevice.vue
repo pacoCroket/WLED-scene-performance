@@ -26,6 +26,7 @@ export default {
   props: {
     data: Object,
     index: Number,
+    foundTime: Date,
   },
   data() {
     return {
@@ -33,28 +34,37 @@ export default {
       colors: [],
     };
   },
-  created() {
-    this.connection = new WebSocket("ws://" + this.data.ip + "/ws");
-
-    this.connection.onmessage = (event) => {
-      try {
-        this.colors = JSON.parse(event.data).leds?.map((it) => "#" + it);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-
-    this.connection.onopen = () => {
-      this.connection.send(JSON.stringify({ lv: true }));
-    };
+  mounted() {
+    this.openWebsocket();
   },
   methods: {
     ...mapMutations(["setColors"]),
+    openWebsocket() {
+      this.connection = new WebSocket("ws://" + this.data.ip + "/ws");
+
+      this.connection.onmessage = (event) => {
+        try {
+          this.colors = JSON.parse(event.data).leds?.map((it) => "#" + it);
+        } catch (err) {
+          console.log(err);
+        }
+      };
+
+      this.connection.onopen = () => {
+        this.connection.send(JSON.stringify({ lv: true }));
+      };
+    },
   },
   watch: {
     colors: function (colors) {
       this.index === 0 && this.$store.commit("setColors", colors);
     }, // only the first device sets the colors
+    foundTime: function () {
+      if (this.connection) {
+        this.connection.close();
+      }
+      this.openWebsocket();
+    },
   },
 };
 </script>

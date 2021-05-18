@@ -41,10 +41,12 @@ export default {
       wledDevices: {},
       localIp: "192.168.0.1",
       isSearching: false,
+      presetInterval: null,
     };
   },
   created() {
     this.findWled();
+    this.startPreset();
   },
   methods: {
     findWled() {
@@ -100,6 +102,40 @@ export default {
           // Do nothing
           // console.debug(err);
         }
+      }
+    },
+    startPreset() {
+      if (this.colors.length === 0) {
+        const nextColors = [];
+        for (let i = 0; i < 30; i++) {
+          nextColors.push(this.makeRandomColor());
+        }
+        this.$store.commit("setColors", nextColors);
+      }
+
+      this.presetInterval = setInterval(() => {
+        const nextColors = this.colors.map((color) => this.makeRandomColor());
+        this.$store.commit("setColors", nextColors);
+      }, 1000);
+    },
+    makeRandomColor() {
+      return (
+        "#" + ((Math.random() * 0xffffff) << 0).toString(16).padStart(6, "0")
+      );
+    },
+  },
+  computed: {
+    colors() {
+      return this.$store.getters.colors;
+    },
+  },
+  watch: {
+    wledDevices(wledDevices) {
+      // show preset colors if no live feed form wled device
+      if (Object.keys(wledDevices).length == 0) {
+        this.startPreset();
+      } else {
+        clearInterval(this.presetInteval);
       }
     },
   },

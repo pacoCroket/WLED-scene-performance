@@ -38,7 +38,7 @@ export default {
       this.hue = (this.hue + 1) % 360;
       document.documentElement.style.setProperty(
         "--delta-font-color",
-        `hsl(${this.hue}, 60%, 50%)`
+        `hsl(${this.hue}, 80%, 50%)`
       );
     },
   },
@@ -47,7 +47,7 @@ export default {
 
 <style>
 :root {
-  --delta-font-color: hsl(0, 0%, 0%);
+  --delta-font-color: hsl(0, 80%, 60%);
 }
 body {
   margin: 0;

@@ -30,6 +30,7 @@
 <script>
 import axios from "axios";
 import WledDevice from "./WledDevice";
+import chroma from "chroma-js";
 
 export default {
   name: "WledFinder",
@@ -107,21 +108,22 @@ export default {
     startPreset() {
       if (this.colors.length === 0) {
         const nextColors = [];
-        for (let i = 0; i < 30; i++) {
-          nextColors.push(this.makeRandomColor());
+        const colorCount = 30;
+        const scale = chroma
+          .scale([chroma.random(), chroma.random(), chroma.random()])
+          .domain([0, colorCount]);
+        for (let i = 0; i < colorCount; i++) {
+          nextColors.push(scale(i).hex());
         }
         this.$store.commit("setColors", nextColors);
       }
 
       this.presetInterval = setInterval(() => {
-        const nextColors = this.colors.map((color) => this.makeRandomColor());
+        const nextColors = this.colors.map((color) =>
+          chroma(color).set("hsl.h", "+1").hex()
+        );
         this.$store.commit("setColors", nextColors);
-      }, 1000);
-    },
-    makeRandomColor() {
-      return (
-        "#" + ((Math.random() * 0xffffff) << 0).toString(16).padStart(6, "0")
-      );
+      }, 20);
     },
   },
   computed: {

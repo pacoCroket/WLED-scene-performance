@@ -46,7 +46,7 @@ export default {
     };
   },
   created() {
-    this.findWled();
+    // this.findWled();
     this.startPreset();
   },
   methods: {
@@ -106,20 +106,22 @@ export default {
       }
     },
     startPreset() {
-      if (this.colors.length === 0) {
-        const nextColors = [];
-        const colorCount = 30;
-        const scale = chroma
-          .scale([chroma.random(), chroma.random(), chroma.random()])
-          .domain([0, colorCount]);
-        for (let i = 0; i < colorCount; i++) {
-          nextColors.push(scale(i).hex());
-        }
-        this.$store.commit("setColors", nextColors);
+      const nextColors = [];
+      const colorCount = 40;
+      const scale = chroma
+        .scale([
+          chroma.random().set("hsl.s", "*1.2"),
+          chroma.random().set("hsl.s", "*1.7"),
+          chroma.random().set("hsl.s", "*2"),
+        ])
+        .domain([0, colorCount]);
+      for (let i = 0; i < colorCount; i++) {
+        nextColors.push(scale(i).hex());
       }
+      this.$store.commit("setColors", nextColors);
 
       this.presetInterval = setInterval(() => {
-        const nextColors = this.colors.map((color) =>
+        const nextColors = this.colors?.map((color) =>
           chroma(color).set("hsl.h", "+1").hex()
         );
         this.$store.commit("setColors", nextColors);

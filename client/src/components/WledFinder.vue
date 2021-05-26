@@ -76,7 +76,7 @@ export default {
                   [ip]: { ip, ...body, foundTime: new Date() },
                 };
                 // extend wled data with state
-                axios("http://" + ip + "/json/state").then((res) => {
+                axios("https://" + ip + "/json/state").then((res) => {
                   if (res.statusText === "OK") {
                     const body = res.data;
                     this.wledDevices[ip] = {

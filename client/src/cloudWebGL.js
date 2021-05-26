@@ -12,7 +12,7 @@ import * as dat from "dat.gui";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
 // Debug
-let gui, lightingFolder, positionFolder;
+let gui, lightingFolder;
 
 let scene,
   camera,
@@ -28,31 +28,19 @@ function initGui() {
   document.querySelector(".dg.main.a")?.remove();
   gui = new dat.GUI();
   lightingFolder = gui.addFolder("Lighting");
-  positionFolder = gui.addFolder("Position");
 }
 
 export function initCloud(_parentNode) {
   parentNode = _parentNode;
   initGui();
   scene = new THREE.Scene();
-  camera = new THREE.PerspectiveCamera(60, parentNode.offsetWidth / parentNode.offsetHeight, 1, 1000);
-  // camera.position.x = 100;
-  // camera.position.x = 100;
+  camera = new THREE.PerspectiveCamera(60, parentNode.offsetWidth / parentNode.offsetHeight, 1, 2000);
   camera.position.y = -808;
-  // camera.position.z = -100;
-  // camera.rotation.x = 0.5;
-  // camera.rotation.y = Math.PI / 2;
-  // camera.rotation.z = 0.8;
-
-  positionFolder.add(camera.position, "x", -200, 1000);
-  positionFolder.add(camera.position, "y", -200, 1000);
-  positionFolder.add(camera.position, "z", -200, 1000);
-  positionFolder.add(camera.rotation, "x", -1, 2);
-  positionFolder.add(camera.rotation, "y", -0.2, 0.2);
 
   let ambient = new THREE.AmbientLight(0xffffff, 1);
   scene.add(ambient);
-  let directionalLight = new THREE.DirectionalLight(0xffffff, 1.5);
+  lightingFolder.add(ambient, "intensity", 0, 20);
+  let directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
   directionalLight.position.set(0, -200, 0);
   scene.add(directionalLight);
 
@@ -89,8 +77,6 @@ export function generateClouds(cloudCount = 20) {
       opacity: 0.8,
       side: THREE.DoubleSide,
     });
-
-    positionFolder.add(cloudMaterial, "opacity", 0, 1);
 
     for (let p = 0; p < cloudCount; p++) {
       let cloud = new THREE.Mesh(cloudGeo, cloudMaterial);

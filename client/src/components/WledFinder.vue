@@ -8,7 +8,7 @@
           @click="findWled()"
           :class="{ loading: isSearching }"
           :disabled="isSearching"
-          class="btn"
+          class="glow-on-hover"
         >
           Scan
         </button>
@@ -120,7 +120,9 @@ export default {
       }
       this.$store.commit("setColors", nextColors);
 
-      this.presetInterval = setInterval(() => {
+      this.presetInterval = true;
+      setInterval(() => {
+        if (!this.presetInterval) return;
         const nextColors = this.colors?.map((color) =>
           chroma(color).set("hsl.h", "+1").hex()
         );
@@ -136,10 +138,10 @@ export default {
   watch: {
     wledDevices(wledDevices) {
       // show preset colors if no live feed form wled device
-      if (Object.keys(wledDevices).length == 0) {
+      if (Object.keys(wledDevices).length === 0) {
         this.startPreset();
       } else {
-        clearInterval(this.presetInteval);
+        this.presetInterval = false;
       }
     },
   },

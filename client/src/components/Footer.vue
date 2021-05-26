@@ -1,7 +1,7 @@
 <template >
   <div class="footer">
-    <button class="btn" @click="handleCloudsBtn()">Clouds</button>
-    <button class="btn" @click="handleLightsBtn()">Lights</button>
+    <button class="glow-on-hover" @click="handleCloudsBtn()">Clouds</button>
+    <button class="glow-on-hover" @click="handleLightsBtn()">Lights</button>
   </div>
 </template>
 <script>

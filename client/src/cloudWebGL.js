@@ -112,6 +112,11 @@ function handleComposer() {
 }
 
 export function setLights(colors) {
+  // remove lights if there is less colors
+  while (lightParticles.length > colors.length) {
+    lightParticles.pop();
+  }
+
   for (let i = 0; i < colors.length; i++) {
     // limit the lights to defined light particles
     if (i >= lightParticles.length) break;

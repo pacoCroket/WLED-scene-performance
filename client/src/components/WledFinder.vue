@@ -49,6 +49,12 @@ export default {
     // this.findWled();
     this.startPreset();
   },
+  mounted() {
+    const localIp = localStorage.getItem("localIp");
+    if (localIp) {
+      this.localIp = localIp;
+    }
+  },
   methods: {
     findWled() {
       console.log("finding Wled devices");
@@ -62,7 +68,7 @@ export default {
           ipArray.push(i);
           const ip = ipArray.join(".");
 
-          const promise = axios("http://" + ip + "/json/info", {
+          const promise = axios.get("http://" + ip + "/json/info", {
             timeout: 5000,
           });
 
@@ -76,9 +82,10 @@ export default {
                   [ip]: { ip, ...body, foundTime: new Date() },
                 };
                 // extend wled data with state
-                axios("https://" + ip + "/json/state").then((res) => {
+                axios.get("http://" + ip + "/json/state").then((res) => {
                   if (res.statusText === "OK") {
                     const body = res.data;
+                    console.log({ body });
                     this.wledDevices[ip] = {
                       ...this.wledDevices[ip],
                       ...body,
@@ -143,6 +150,9 @@ export default {
       } else {
         this.presetInterval = false;
       }
+    },
+    localIp(localIp) {
+      localStorage.setItem("localIp", localIp);
     },
   },
 };
